@@ -30,6 +30,22 @@
         </v-card>
       </v-col>
       <v-col cols="4">
+        <v-card>
+          <v-card-title>
+            Featured Apps
+          </v-card-title>
+          <v-card-text>
+            <p>
+              If you opt-in, your app icon and description may be shown on the home page along with
+              a link to download your app.
+            </p>
+            <v-checkbox label="Allow apps to be featured"></v-checkbox>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="4">
         <v-card class="fill-height">
           <v-card-title>
             Donate
@@ -41,26 +57,18 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
-    <v-row>
       <v-col>
         <v-card>
           <v-card-title>
             Contact Me
           </v-card-title>
           <v-card-text>
-            <v-container class="pa-0">
-              <v-row no-gutters>
-                <v-col cols="3">
-                  Feel free to reach out if you run into any issues, have any feature suggestions, 
-                  or just want to chat!
-                </v-col>
-                <v-col>
-                  <v-text-field label="Email" placeholder="hello@kevz.dev" type="email" ></v-text-field>
-                  <v-textarea label="Message" placeholder="Say hello!"></v-textarea>
-                </v-col>
-              </v-row>
-            </v-container>
+            <p class="pb-4">
+              Feel free to reach out if you run into any issues, have any feature suggestions,
+              or just want to chat!
+            </p>
+            <v-text-field label="Email" placeholder="hello@kevz.dev" type="email"></v-text-field>
+            <v-textarea label="Message" placeholder="Say hello!"></v-textarea>
           </v-card-text>
         </v-card>
       </v-col>

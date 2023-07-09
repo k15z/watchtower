@@ -166,7 +166,7 @@ table.footer a:hover {
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import router from '../router'
-import { BASE_API_URL } from '../constants'
+import { BASE_API_URL } from '../api'
 import { store } from '../store'
 
 const state = reactive({
@@ -215,3 +215,4 @@ function getTheApp() {
   alert("Coming soon!")
 }
 </script>
+../api

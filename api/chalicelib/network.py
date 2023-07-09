@@ -1,10 +1,11 @@
 """
 GET /api/network/ecpm?breakdowns=date,platform,format
 """
+import pandas as pd
 
 VALID_BREAKDOWNS = set(
     [
-        "date",
+        "week",
         "country",
         "format",
         "platform",
@@ -28,7 +29,7 @@ def network_ecpm(conn, id, breakdowns):
                 NULLIF(SUM(CASE WHEN account_id = %s THEN impressions ELSE 0 END), 0)
             ) / 1000.0 as your_ecpm
         FROM (
-            SELECT * FROM record
+            SELECT cast(date_trunc('week', date) as date) as week, * FROM record
             JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
             JOIN app ON ad_unit.admob_app_id = app.admob_app_id
             JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
@@ -40,4 +41,26 @@ def network_ecpm(conn, id, breakdowns):
         """,
             (id, id),
         )
-        return cursor.fetchall()
+        rows = cursor.fetchall()
+        if "week" not in breakdowns:
+            return rows
+
+        # Special handling for time series breakdowns
+        df = pd.DataFrame(rows)
+        df["week"] = df["week"].map(lambda x: x.strftime("%Y-%m-%d"))
+        breakdowns_no_date = [x for x in breakdowns if x != 'week']
+        if not breakdowns_no_date:
+            raise ValueError("Expected additional breakdowns with week!")
+        df = df.pivot(index="week", columns=breakdowns_no_date, values="ecpm")
+        df = df.where((pd.notnull(df)), None)
+
+        series = []
+        for column_name in df.columns:
+            series.append({
+                "breakdown": column_name,
+                "data": df[column_name].values.tolist(),
+            })
+        return {
+            "week": df.index.values.tolist(),
+            "series": series
+        }

@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BASE_API_URL } from '../../constants'
+import { BASE_API_URL } from '../../api'
 import { store } from '../../store'
 import router from '../../router'
 
@@ -47,3 +47,4 @@ fetch(BASE_API_URL + "/account", {
     }
 })
 </script>
+../../api
