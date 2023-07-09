@@ -1,7 +1,7 @@
 def get_account(conn, id: int):
     with conn.cursor() as cursor:
         cursor.execute(
-            "SELECT email, picture_url, first_name, last_name FROM account WHERE id = %s",
+            "SELECT email, picture_url, first_name, last_name, status FROM account WHERE id = %s",
             (id,),
         )
         row = cursor.fetchone()

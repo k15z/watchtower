@@ -7,6 +7,7 @@ const store = reactive({
         last_name: '',
         picture_url: '',
         email: '',
+        status: '',
     }
 });
 

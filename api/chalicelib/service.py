@@ -42,8 +42,14 @@ def sync_dataset(conn):
         account_ids = [row["id"] for row in cursor.fetchall()]
     date = datetime.datetime.now(ZoneInfo("US/Pacific")) - datetime.timedelta(days=1)
     for account_id in account_ids:
-        service = build_admob_service(conn, account_id)
-        _fetch_admob_data(conn, service, date)
+        try:
+            service = build_admob_service(conn, account_id)
+            _fetch_admob_data(conn, service, date)
+        except Exception as e:
+            print("Error updating", account_id, e)
+            with conn.cursor() as cursor:
+                cursor.execute("UPDATE account SET status = 'ERROR' WHERE id = %s", (account_id,))
+            conn.commit()
 
 
 def _fetch_apps_and_ad_units(conn, service):

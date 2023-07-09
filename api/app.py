@@ -10,7 +10,7 @@ from chalicelib.account import (delete_account, get_account, get_ad_units,
 from chalicelib.auth import authenticate, authorize
 from chalicelib.db import connection
 from chalicelib.network import network_ecpm
-from chalicelib.realtime import realtime_by_ad_unit, realtime_by_app
+from chalicelib.realtime import realtime_query, realtime_by_app
 from chalicelib.service import backfill_account, sync_dataset
 from chalicelib.utils import get_account_id
 
@@ -105,7 +105,7 @@ def _get_timedelta(period):
 def _parse_start_end(query_params):
     if "period" in query_params:
         period = query_params.get("period")
-        end = datetime.datetime.now(ZoneInfo("US/Pacific"))
+        end = datetime.datetime.now(ZoneInfo("US/Pacific")) + datetime.timedelta(days=1)
         if query_params.get("previous"):
             end = end - _get_timedelta(period)
         start = end - _get_timedelta(period)
@@ -125,14 +125,15 @@ def _get_realtime_by_app():
         return realtime_by_app(conn, id, start, end)
 
 
-@app.route("/realtime/by_ad_unit")
-def _get_realtime_by_ad_unit():
+@app.route("/realtime/query")
+def _realtime_query():
     auth = app.current_request.headers.get("Authorization", None)
     token = auth.split()[1]
     with connection() as conn:
         id = get_account_id(conn, token)
         start, end = _parse_start_end(app.current_request.query_params)
-        return realtime_by_ad_unit(conn, id, start, end)
+        breakdowns = app.current_request.query_params.get("breakdowns", "").split(",")
+        return realtime_query(conn, id, start, end, breakdowns)
 
 
 @app.on_sqs_message(queue="WatchtowerNewUserAuth")

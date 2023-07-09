@@ -58,6 +58,13 @@ def authorize(conn, auth_code: str) -> str:
         row = cursor.fetchone()
         if row:
             account_id = row["id"]
+            cursor.execute(
+                "UPDATE account SET credentials = %s WHERE id = %s",
+                (
+                    base64.b64encode(pickle.dumps(flow.credentials)),
+                    account_id,
+                ),
+            )
         else:
             cursor.execute(
                 "INSERT INTO account (email, picture_url, first_name, last_name, credentials) VALUES (%s, %s, %s, %s, %s) RETURNING id",

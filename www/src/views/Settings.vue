@@ -74,10 +74,16 @@
       </v-col>
     </v-row>
     <div class="pt-4" style="text-align: right;">
+      <v-btn @click="signOut" color="outline" class="mr-4">Sign Out</v-btn>
       <v-btn color="red">Delete Account</v-btn>
     </div>
   </v-container>
 </template>
 
 <script lang="ts" setup>
+import router from "../router"
+function signOut() {
+  localStorage.clear()
+  router.push("/")
+}
 </script>

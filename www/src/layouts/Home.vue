@@ -194,7 +194,6 @@ function validateAuthorizationCode(code: string) {
     } else {
       alert("Please try again using the Google Account linked to your AdMob profile.")
     }
-    console.log(resp)
   })
 }
 

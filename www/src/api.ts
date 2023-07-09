@@ -14,4 +14,29 @@ function ecpmByBreakdowns(breakdowns: string) {
     })
 }
 
-export { BASE_API_URL, ecpmByBreakdowns }
+function realtimeByApp(period: string, previous: boolean) {
+    if (previous) {
+        period += "&previous=true"
+    }
+    return fetch(BASE_API_URL + "/realtime/by_app?period=" + period, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Authorization': `Bearer ${store.token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+function realtimeQuery(start: string, end: string, breakdowns: string[]) {
+    return fetch(BASE_API_URL + "/realtime/query?start=" + start + "&end=" + end + "&breakdowns=" + breakdowns.join(","), {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+            'Authorization': `Bearer ${store.token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
+export { BASE_API_URL, ecpmByBreakdowns, realtimeByApp, realtimeQuery }

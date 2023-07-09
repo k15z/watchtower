@@ -37,6 +37,7 @@ fetch(BASE_API_URL + "/account", {
 }).then((res) => {
     if (res.ok) {
         res.json().then((res: any) => {
+            store.profile.status = res.status;
             store.profile.first_name = res.first_name;
             store.profile.last_name = res.last_name;
             store.profile.picture_url = res.picture_url;
