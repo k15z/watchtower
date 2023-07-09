@@ -1,0 +1,46 @@
+{
+  "resources": [
+    {
+      "name": "default-role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::082395104119:role/watchtower-api-dev",
+      "role_name": "watchtower-api-dev"
+    },
+    {
+      "name": "_backfill_account",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:082395104119:function:watchtower-api-dev-_backfill_account"
+    },
+    {
+      "name": "_backfill_account-sqs-event-source",
+      "resource_type": "sqs_event",
+      "queue_arn": "arn:aws:sqs:us-east-1:082395104119:WatchtowerNewUserAuth",
+      "event_uuid": "cd6fa5c4-c033-4759-bedd-9e4bb62e964b",
+      "queue": "WatchtowerNewUserAuth",
+      "lambda_arn": "arn:aws:lambda:us-east-1:082395104119:function:watchtower-api-dev-_backfill_account"
+    },
+    {
+      "name": "_sync_dataset",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:082395104119:function:watchtower-api-dev-_sync_dataset"
+    },
+    {
+      "name": "_sync_dataset-event",
+      "resource_type": "cloudwatch_event",
+      "rule_name": "watchtower-api-dev-_sync_dataset-event"
+    },
+    {
+      "name": "api_handler",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:082395104119:function:watchtower-api-dev"
+    },
+    {
+      "name": "rest_api",
+      "resource_type": "rest_api",
+      "rest_api_id": "5l40l9u6y0",
+      "rest_api_url": "https://5l40l9u6y0.execute-api.us-east-1.amazonaws.com/api/"
+    }
+  ],
+  "schema_version": "2.0",
+  "backend": "api"
+}
