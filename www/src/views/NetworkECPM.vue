@@ -1,16 +1,13 @@
 <template>
   <v-container>
     <v-row>
+      <v-col>
+        <country-e-c-p-m></country-e-c-p-m>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col cols="6">
-        <v-card>
-          <v-card-text>
-            Explore the average eCPM across the AdMob network and compare it to your eCPM to
-            gain new insights, understand the state of the market, and identify new
-            opportunities to grow your revenue.
-          </v-card-text>
-        </v-card>
-        <br />
-        <v-card>
+        <v-card class="fill-height">
           <v-card-text>
             <v-table>
               <thead>
@@ -63,22 +60,7 @@
     </v-row>
     <v-row>
       <v-col>
-        <v-card>
-          <v-card-title>Country</v-card-title>
-          <v-card-text>
-            <v-skeleton-loader type="card-avatar"></v-skeleton-loader>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <v-card>
-          <v-card-title>Custom Breakdowns</v-card-title>
-          <v-card-text>
-            <v-skeleton-loader type="table"></v-skeleton-loader>
-          </v-card-text>
-        </v-card>
+        <v-alert style="text-align:center; font-size: 0.85rem;">Looking for something else? Let us know what breakdowns you'd like to see <router-link to="/dashboard/settings">here</router-link>!</v-alert>
       </v-col>
     </v-row>
   </v-container>
@@ -87,12 +69,12 @@
 <script lang="ts" setup>
 import { ecpmByBreakdowns } from '../api'
 import { reactive } from 'vue'
-import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
 import HistoricalECPM from "../components/HistoricalECPM.vue"
+import CountryECPM from "../components/CountryECPM.vue"
 
 const data = reactive({
-  "serving": [],
-  "platform": [],
+  "serving": [] as any,
+  "platform": [] as any,
 })
 
 
