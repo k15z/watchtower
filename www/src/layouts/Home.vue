@@ -27,7 +27,7 @@
             </v-btn>
           </template>
           <template v-if="state.is_signed_in">
-            <v-btn :to="'dashboard'" color="red" min-width="228" rel="noopener noreferrer" size="large" variant="flat">
+            <v-btn to="/dashboard" color="red" min-width="228" rel="noopener noreferrer" size="large" variant="flat">
               <v-icon icon="mdi-view-dashboard" size="large" start />
 
               Go To Dashboard
@@ -128,9 +128,10 @@
         </p>
         <ul class="pa-6">
           <li>Time</li>
+          <li>Format</li>
           <li>Country</li>
-          <li>Personalized vs non-personalized ads</li>
-          <li>App Category (coming soon..)</li>
+          <li>Personalization</li>
+          <li>App category (coming soon!)</li>
         </ul>
         <p>
           Discover issues and find new opportunities with the <b>Network eCPM</b> report which 

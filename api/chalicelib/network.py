@@ -30,10 +30,10 @@ def network_ecpm(conn, id, breakdowns):
             ) / 1000.0 as your_ecpm
         FROM (
             SELECT cast(date_trunc('week', date) as date) as week, * FROM record
-            JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
-            JOIN app ON ad_unit.admob_app_id = app.admob_app_id
-            JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
-            JOIN account ON publisher.account_id = account.id
+            LEFT JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
+            LEFT JOIN app ON ad_unit.admob_app_id = app.admob_app_id
+            LEFT JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
+            LEFT JOIN account ON publisher.account_id = account.id
             WHERE impressions > 0
         ) dataset
         GROUP BY {",".join(breakdowns)}
