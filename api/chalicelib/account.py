@@ -32,3 +32,12 @@ def get_ad_units(conn, id):
             (id,),
         )
         return cursor.fetchall()
+
+
+def insert_message(conn, id, email, message):
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO message (account_id, email, message) VALUES (%s,%s,%s)",
+            (id, email, message),
+        )
+    conn.commit()

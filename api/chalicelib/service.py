@@ -48,7 +48,9 @@ def sync_dataset(conn):
         except Exception as e:
             print("Error updating", account_id, e)
             with conn.cursor() as cursor:
-                cursor.execute("UPDATE account SET status = 'ERROR' WHERE id = %s", (account_id,))
+                cursor.execute(
+                    "UPDATE account SET status = 'ERROR' WHERE id = %s", (account_id,)
+                )
             conn.commit()
 
 

@@ -13,5 +13,13 @@ with connection() as conn:
     # print(get_ad_units(conn, 6))
     # print(network_ecpm(conn, 6, breakdowns=["format", "platform"]))
     # sync_dataset(conn)
-    print(realtime_query(conn, 6, datetime(year=2023, month=7, day=1), datetime(year=2023, month=7, day=7), breakdowns=["DATE"]))
+    print(
+        realtime_query(
+            conn,
+            7,
+            datetime(year=2023, month=7, day=1),
+            datetime(year=2023, month=7, day=7),
+            breakdowns=["DATE"],
+        )
+    )
     # print(realtime_by_ad_unit(conn, 6, datetime(year=2023, month=7, day=1), datetime(year=2023, month=7, day=7)))

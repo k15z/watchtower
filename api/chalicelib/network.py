@@ -48,7 +48,7 @@ def network_ecpm(conn, id, breakdowns):
         # Special handling for time series breakdowns
         df = pd.DataFrame(rows)
         df["week"] = df["week"].map(lambda x: x.strftime("%Y-%m-%d"))
-        breakdowns_no_date = [x for x in breakdowns if x != 'week']
+        breakdowns_no_date = [x for x in breakdowns if x != "week"]
         if not breakdowns_no_date:
             raise ValueError("Expected additional breakdowns with week!")
         df = df.pivot(index="week", columns=breakdowns_no_date, values="ecpm")
@@ -56,11 +56,10 @@ def network_ecpm(conn, id, breakdowns):
 
         series = []
         for column_name in df.columns:
-            series.append({
-                "breakdown": column_name,
-                "data": df[column_name].values.tolist(),
-            })
-        return {
-            "week": df.index.values.tolist(),
-            "series": series
-        }
+            series.append(
+                {
+                    "breakdown": column_name,
+                    "data": df[column_name].values.tolist(),
+                }
+            )
+        return {"week": df.index.values.tolist(), "series": series}

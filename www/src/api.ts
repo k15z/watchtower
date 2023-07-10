@@ -1,5 +1,6 @@
 import { store } from './store'
 
+// const BASE_API_URL = "http://localhost:8000"
 const BASE_API_URL = "https://5l40l9u6y0.execute-api.us-east-1.amazonaws.com/api"
 
 function ecpmByBreakdowns(breakdowns: string) {

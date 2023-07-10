@@ -8,7 +8,6 @@ from zoneinfo import ZoneInfo
 from .utils import build_admob_service
 
 
-
 def realtime_by_app(conn, id, start_date, end_date):
     """Return basic stats grouped by app and aggregated over the specified window."""
     service = build_admob_service(conn, id)
@@ -67,8 +66,19 @@ def realtime_by_app(conn, id, start_date, end_date):
 
 
 def _validate_breakdowns(breakdowns):
-    VALID_BREAKDOWNS = ["DATE", "AD_UNIT", "APP", "COUNTRY", "FORMAT", "PLATFORM", "MOBILE_OS_VERSION", "GMA_SDK_VERSION", "APP_VERSION_NAME"]
+    VALID_BREAKDOWNS = [
+        "DATE",
+        "AD_UNIT",
+        "APP",
+        "COUNTRY",
+        "FORMAT",
+        "PLATFORM",
+        "MOBILE_OS_VERSION",
+        "GMA_SDK_VERSION",
+        "APP_VERSION_NAME",
+    ]
     assert set(breakdowns).issubset(VALID_BREAKDOWNS)
+
 
 def realtime_query(conn, id, start_date, end_date, breakdowns=[]):
     """Return data in the format expected by v-data-tables."""

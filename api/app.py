@@ -6,11 +6,12 @@ from chalice import Chalice
 from dateutil.parser import parse
 
 from chalicelib.account import (delete_account, get_account, get_ad_units,
-                                get_apps)
-from chalicelib.auth import authenticate, authorize
+                                get_apps, insert_message)
+from chalicelib.auth import (authenticate, authorize, delete_api_keys,
+                             generate_api_key)
 from chalicelib.db import connection
 from chalicelib.network import network_ecpm
-from chalicelib.realtime import realtime_query, realtime_by_app
+from chalicelib.realtime import realtime_by_app, realtime_query
 from chalicelib.service import backfill_account, sync_dataset
 from chalicelib.utils import get_account_id
 
@@ -78,6 +79,35 @@ def _get_account_ad_units():
     with connection() as conn:
         id = get_account_id(conn, token)
         return get_ad_units(conn, id)
+
+
+@app.route("/account/api_keys")
+def _generate_account_api_keys():
+    auth = app.current_request.headers.get("Authorization", None)
+    token = auth.split()[1]
+    with connection() as conn:
+        id = get_account_id(conn, token)
+        return generate_api_key(conn, id)
+
+
+@app.route("/account/api_keys", methods=["DELETE"])
+def _delete_account_api_keys():
+    auth = app.current_request.headers.get("Authorization", None)
+    token = auth.split()[1]
+    with connection() as conn:
+        id = get_account_id(conn, token)
+        return delete_api_keys(conn, id)
+
+
+@app.route("/account/message", methods=["POST"])
+def _post_account_message():
+    auth = app.current_request.headers.get("Authorization", None)
+    token = auth.split()[1]
+    with connection() as conn:
+        id = get_account_id(conn, token)
+        body = app.current_request.json_body
+        body["email"], body["message"]
+        return insert_message(conn, id, body["email"], body["message"])
 
 
 @app.route("/network/ecpm")

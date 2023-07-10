@@ -86,3 +86,23 @@ def authorize(conn, auth_code: str) -> str:
     conn.commit()
 
     return account_id, _generate_auth_token(conn, account_id)
+
+
+def generate_api_key(conn, account_id):
+    auth_token = str(uuid.uuid4())
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "INSERT INTO token (account_id, token, type) VALUES (%s, %s, %s)",
+            (account_id, auth_token, "API_KEY"),
+        )
+    conn.commit()
+    return auth_token
+
+
+def delete_api_keys(conn, account_id):
+    with conn.cursor() as cursor:
+        cursor.execute(
+            "DELETE FROM token WHERE account_id = %s AND type = %s",
+            (account_id, "API_KEY"),
+        )
+    conn.commit()
