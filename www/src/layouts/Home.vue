@@ -3,9 +3,8 @@
     <v-responsive class="align-center text-center fill-height">
       <v-img height="300" src="@/assets/logo.png" />
 
-      <div class="text-body-2 font-weight-light mb-n1">Welcome to</div>
-
-      <h1 class="text-h2 font-weight-bold">AdMob Watchtower</h1>
+      <h1 class="text-h3 font-weight-bold">AdMob Watchtower</h1>
+      <div class="text-body-1 font-weight-light mb-n1">A third-party app for bringing transparency to the AdMob network.</div>
 
       <div class="py-14" />
 
@@ -66,7 +65,8 @@
               <v-icon icon="mdi-account-group" size="x-large"></v-icon>
             </td>
             <td>
-              Benchmark your eCPM with similar apps in your category to find opportunities.
+              Use the Network eCPM report to compare your eCPM with peers to find issues as 
+              well as opportunities.
             </td>
           </tr>
           <tr>
@@ -74,7 +74,8 @@
               <v-icon icon="mdi-bell-badge" size="x-large"></v-icon>
             </td>
             <td>
-              Use alerting to automatically spot potential issues with your AdMob setup.
+              Use the Data Explorer to navigate your AdMob data and gain new insights into
+              your ad revenue.
             </td>
           </tr>
         </table>
@@ -89,10 +90,8 @@
                 with
                 test
                 ads instead of real ads,
-                resulting in no valid impressions.</b> Watchtower can automatically alert you
-              when
-              it
-              detects anomalies in your eCPM across various breakdowns.</v-expansion-panel-text>
+                resulting in no valid impressions.</b> Watchtower can help you
+              find anomalies in your eCPM across various breakdowns.</v-expansion-panel-text>
           </v-expansion-panel>
           <v-expansion-panel>
             <v-expansion-panel-title>Troubleshoot unusual eCPM values</v-expansion-panel-title>
@@ -108,12 +107,42 @@
             <v-expansion-panel-title>Explore the AdMob network</v-expansion-panel-title>
             <v-expansion-panel-text><b>Suppose you're considering rolling out your app to a new
                 geographic
-                region which would require additional work.</b> Watchtower
+                region.</b> Watchtower
               can
               help you understand the current state of the market in that region for apps in your
               category.</v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
+      </v-col>
+    </v-row>
+  </v-container>
+  <v-container class="pb-16">
+    <v-row>
+      <v-col>
+        <v-img :width="640" src="@/assets/map.png" />
+      </v-col>
+      <v-col>
+        <h1 class="text-h5 font-weight-bold">Network eCPM</h1>
+        <p>
+          Understand the state of the market by exploring eCPM breakdowns based on:
+        </p>
+        <ul class="pa-6">
+          <li>Time</li>
+          <li>Country</li>
+          <li>Personalized vs non-personalized ads</li>
+          <li>App Category (coming soon..)</li>
+        </ul>
+        <p>
+          Discover issues and find new opportunities with the <b>Network eCPM</b> report which 
+          provides you with the latest data from across our network.
+        </p>
+      </v-col>
+    </v-row>
+    <v-row class="pt-16">
+      <v-col>
+        <h1 class="text-h5 font-weight-bold">Data Explorer</h1>
+        Explore your realtime AdMob statistics with the built-in data explorer to see all your data in one place.
+        <v-img src="@/assets/overview.png" />
       </v-col>
     </v-row>
   </v-container>
@@ -130,6 +159,9 @@
       </tr>
     </table>
   </v-container>
+  <v-overlay :model-value="state.is_validating" class="align-center justify-center">
+    <v-progress-circular color="primary" indeterminate size="64"></v-progress-circular>
+  </v-overlay>
 </template>
 
 <style scoped>
@@ -168,12 +200,16 @@ import { reactive } from 'vue'
 import router from '../router'
 import { BASE_API_URL } from '../api'
 import { store } from '../store'
+import { event } from 'vue-gtag'
 
 const state = reactive({
+  is_validating: false,
   is_signed_in: localStorage.getItem("token") ? true : false
 })
 
 function validateAuthorizationCode(code: string) {
+  event("validation_start", {})
+  state.is_validating = true
   fetch(BASE_API_URL + "/authorize", {
     method: 'POST',
     mode: 'cors',
@@ -184,33 +220,42 @@ function validateAuthorizationCode(code: string) {
       'auth_code': code
     })
   }).then((resp) => {
+    state.is_validating = false
     if (resp.ok) {
       resp.json().then((res) => {
+        event("validation_success", {})
         state.is_signed_in = true
         store.token = res.token
         localStorage.setItem("token", res.token)
         router.push('/dashboard')
       })
     } else {
+      event("validation_fail", {})
       alert("Please try again using the Google Account linked to your AdMob profile.")
     }
   })
 }
 
 function launchAuthorizationFlow() {
+  event("authorize_start", {})
   // @ts-ignore
   const client = google.accounts.oauth2.initCodeClient({
     client_id: '758313252344-959jdouposo1nd3mq7c01b6rbv0mf8hf.apps.googleusercontent.com',
     scope: 'https://www.googleapis.com/auth/admob.readonly https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
     ux_mode: 'popup',
     callback: (authorization: any) => {
+      event("authorize_received", {})
       validateAuthorizationCode(authorization.code)
+    },
+    error_callback: (error: any) => {
+      event("authorize_failed", error)
     }
   })
   client.requestCode()
 }
 
 function getTheApp() {
+  event("get_the_app", {})
   alert("Coming soon!")
 }
 </script>
