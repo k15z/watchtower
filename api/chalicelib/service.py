@@ -1,6 +1,9 @@
 import datetime
 import json
+import requests
 from zoneinfo import ZoneInfo
+from google_play_scraper import app
+
 
 from .utils import build_admob_service
 
@@ -239,3 +242,33 @@ def _fetch_admob_data(conn, service, date):
                 rows,
             )
         conn.commit()
+
+def fetch_app_json(conn):
+    """For each app, populate the app_external table with its metadata."""
+    with conn.cursor() as cursor:
+        cursor.execute("SELECT id, platform, app_store_id FROM app WHERE id NOT IN (SELECT app_id FROM app_external)")
+        results = cursor.fetchall()
+
+    rows = []
+    for row in results:
+        if row["platform"] == "ANDROID":
+            metadata = app(
+                row['app_store_id'],
+                lang='en', # defaults to 'en'
+                country='us' # defaults to 'us'
+            )
+        elif row["platform"] == "IOS":
+            url = f"https://itunes.apple.com/lookup?id={row['app_store_id']}&country=US&entity=software"
+            metadata = requests.get(url).json()["results"][0]
+        else:
+            print("Unknown platform", row)
+        genre = metadata.get("genre", metadata.get('primaryGenreName'))
+        rows.append((
+            row["id"],
+            genre,
+            json.dumps(metadata, indent=2)
+        ))
+
+    with conn.cursor() as cursor:
+        cursor.executemany("INSERT INTO app_external (app_id, genre, metadata) VALUES (%s, %s, %s)", rows)
+    conn.commit()

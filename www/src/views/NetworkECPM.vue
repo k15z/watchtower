@@ -7,7 +7,7 @@
     </v-row>
     <v-row>
       <v-col cols="6">
-        <v-card class="fill-height">
+        <v-card>
           <v-card-text>
             <v-table>
               <thead>
@@ -20,8 +20,28 @@
               <tbody>
                 <tr v-for="row in data.serving">
                   <td>{{ row.serving_restriction }}</td>
-                  <td>{{ row.ecpm }}</td>
-                  <td>{{ row.your_ecpm }}</td>
+                  <td>${{ row.ecpm }}</td>
+                  <td>${{ row.your_ecpm ? row.your_ecpm : '-' }}</td>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
+        <v-card class="mt-4">
+          <v-card-text>
+            <v-table>
+              <thead>
+                <tr>
+                  <th class="text-left">App Genre</th>
+                  <th class="text-left">Network eCPM</th>
+                  <th class="text-left">Your eCPM</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in data.genre">
+                  <td>{{ row.genre }}</td>
+                  <td>${{ row.ecpm }}</td>
+                  <td>${{ row.your_ecpm ? row.your_ecpm : '-' }}</td>
                 </tr>
               </tbody>
             </v-table>
@@ -44,8 +64,8 @@
                 <tr v-for="row in data.platform">
                   <td>{{ row.platform }}</td>
                   <td>{{ row.format }}</td>
-                  <td>{{ row.ecpm }}</td>
-                  <td>{{ row.your_ecpm }}</td>
+                  <td>${{ row.ecpm }}</td>
+                  <td>${{ row.your_ecpm ? row.your_ecpm : '-' }}</td>
                 </tr>
               </tbody>
             </v-table>
@@ -73,6 +93,7 @@ import HistoricalECPM from "../components/HistoricalECPM.vue"
 import CountryECPM from "../components/CountryECPM.vue"
 
 const data = reactive({
+  "genre": [] as any,
   "serving": [] as any,
   "platform": [] as any,
 })
@@ -87,6 +108,12 @@ ecpmByBreakdowns("platform,format").then((res) => {
 ecpmByBreakdowns("serving_restriction").then((res) => {
   res.json().then((res) => {
     data.serving = res
+  })
+})
+
+ecpmByBreakdowns("genre").then((res) => {
+  res.json().then((res) => {
+    data.genre = res
   })
 })
 

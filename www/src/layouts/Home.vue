@@ -130,8 +130,8 @@
           <li>Time</li>
           <li>Format</li>
           <li>Country</li>
+          <li>App category</li>
           <li>Personalization</li>
-          <li>App category (coming soon!)</li>
         </ul>
         <p>
           Discover issues and find new opportunities with the <b>Network eCPM</b> report which 

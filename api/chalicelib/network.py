@@ -6,6 +6,7 @@ import pandas as pd
 VALID_BREAKDOWNS = set(
     [
         "week",
+        "genre",
         "country",
         "format",
         "platform",
@@ -32,6 +33,7 @@ def network_ecpm(conn, id, breakdowns):
             SELECT cast(date_trunc('week', date) as date) as week, * FROM record
             LEFT JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
             LEFT JOIN app ON ad_unit.admob_app_id = app.admob_app_id
+            LEFT JOIN app_external ON app.id = app_external.app_id
             LEFT JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
             LEFT JOIN account ON publisher.account_id = account.id
             WHERE impressions > 0
