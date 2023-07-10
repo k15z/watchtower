@@ -80,7 +80,7 @@ def authorize(conn, auth_code: str) -> str:
 
         # Insert publisher IDs
         cursor.executemany(
-            "INSERT INTO publisher (account_id, admob_publisher_id) VALUES (%s, %s)",
+            "INSERT INTO publisher (account_id, admob_publisher_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
             [(account_id, publisher_id) for publisher_id in publisher_ids],
         )
     conn.commit()
