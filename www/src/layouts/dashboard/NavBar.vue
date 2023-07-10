@@ -44,6 +44,7 @@ fetch(BASE_API_URL + "/account", {
             store.profile.email = res.email;
         })
     } else {
+        localStorage.clear()
         router.push('/')
     }
 })

@@ -22,7 +22,7 @@ function formatDate(datestr: string) {
     return datestr
 }
 
-function dateToYYYYMMDD(date) {
+function dateToYYYYMMDD(date: Date) {
     return date.getFullYear() + "-" +
         (date.getMonth() + 1).toString().padStart(2, '0') + "-" +
         date.getDate().toString().padStart(2, '0')

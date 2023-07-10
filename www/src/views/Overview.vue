@@ -30,6 +30,12 @@
         <time-series-card></time-series-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <v-alert style="text-align:center; font-size: 0.85rem;">Have an idea? Let me know what you'd like to see on this
+          page <router-link to="/dashboard/settings">here</router-link>!</v-alert>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
