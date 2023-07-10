@@ -10,6 +10,7 @@ import vuetify from './vuetify'
 import router from '../router'
 import vue3GoogleLogin from 'vue3-google-login'
 import VueApexCharts from "vue3-apexcharts";
+import VueGtag from "vue-gtag";
 
 // Types
 import type { App } from 'vue'
@@ -23,4 +24,7 @@ export function registerPlugins (app: App) {
     .use(vue3GoogleLogin, {
       clientId: '758313252344-959jdouposo1nd3mq7c01b6rbv0mf8hf.apps.googleusercontent.com'
     })
+    .use(VueGtag, {
+      config: { id: "G-GJ9L6Q68FP" }
+    }, router)
 }

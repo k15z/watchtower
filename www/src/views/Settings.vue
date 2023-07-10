@@ -88,6 +88,7 @@ import router from "../router"
 import { store } from "@/store"
 import { BASE_API_URL } from "@/api";
 import { reactive } from 'vue'
+import { event } from 'vue-gtag'
 
 const data = reactive({
   "developer_message": "",
@@ -96,6 +97,7 @@ const data = reactive({
 })
 
 function generateAPIKey() {
+  event('generate_api_key', {})
   return fetch(BASE_API_URL + "/account/api_keys", {
     method: 'GET',
     mode: 'cors',
@@ -109,6 +111,7 @@ function generateAPIKey() {
 }
 
 function revokeAPIKeys() {
+  event('revoke_api_keys', {})
   return fetch(BASE_API_URL + "/account/api_keys", {
     method: 'DELETE',
     mode: 'cors',
@@ -122,6 +125,7 @@ function revokeAPIKeys() {
 }
 
 function sendMessage() {
+  event('send_message', {email: data.email})
   return fetch(BASE_API_URL + "/account/message", {
     method: 'POST',
     mode: 'cors',
@@ -140,6 +144,7 @@ function sendMessage() {
 }
 
 function deleteAccount() {
+  event('delete_account', {})
   return fetch(BASE_API_URL + "/account", {
     method: 'DELETE',
     mode: 'cors',
