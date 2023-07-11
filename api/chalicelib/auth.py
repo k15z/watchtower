@@ -2,11 +2,13 @@ import base64
 import os
 import pickle
 import uuid
+import json
 
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
+from .utils import notify
 
 os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
 CLIENT_ID = "758313252344-959jdouposo1nd3mq7c01b6rbv0mf8hf.apps.googleusercontent.com"
@@ -51,6 +53,8 @@ def authorize(conn, auth_code: str) -> str:
         .execute()
     )
     publisher_ids = [account["publisherId"] for account in response["account"]]
+    notify("New Authorization", json.dumps(idinfo))
+    
 
     with conn.cursor() as cursor:
         # Insert account profile

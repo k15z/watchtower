@@ -32,6 +32,11 @@ def backfill_account(conn, id):
             cursor.execute("UPDATE account SET status = 'ERROR' WHERE id = %s", (id,))
         conn.commit()
 
+    try:
+        _fetch_app_json(conn)
+    except Exception as e:
+        print(e)
+
     with conn.cursor() as cursor:
         cursor.execute(
             "UPDATE account SET status = 'FINISHED_BACKFILL' WHERE id = %s", (id,)
@@ -243,7 +248,7 @@ def _fetch_admob_data(conn, service, date):
             )
         conn.commit()
 
-def fetch_app_json(conn):
+def _fetch_app_json(conn):
     """For each app, populate the app_external table with its metadata."""
     with conn.cursor() as cursor:
         cursor.execute("SELECT id, platform, app_store_id FROM app WHERE id NOT IN (SELECT app_id FROM app_external)")

@@ -1,7 +1,17 @@
+import boto3
 import base64
 import pickle
 
 from googleapiclient.discovery import build
+
+
+def notify(subject, message):
+    client = boto3.client('sns')
+    client.publish(
+        TopicArn='arn:aws:sns:us-east-1:082395104119:AdMobWatchtowerEmailAlert',
+        Subject=subject,
+        Message=message,
+    )
 
 
 def get_account_id(conn, token: str) -> int:
