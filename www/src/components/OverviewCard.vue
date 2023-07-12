@@ -1,6 +1,6 @@
 <template>
     <v-card class="fill-height">
-        <v-card-text>
+        <v-card-text style="overflow-x: auto;">
             <div style="text-align:right;">
                 <v-btn-toggle v-model="toggle" divided color="primary" mandatory style="height:1.7em;">
                     <v-btn @click="updateOverview" value="1-day">Today</v-btn>
@@ -9,58 +9,67 @@
                 </v-btn-toggle>
             </div>
             <v-table class="stats">
-                <tr class="header">
-                    <td>App</td>
-                    <td>Earnings</td>
-                    <td>Impressions</td>
-                    <td>eCPM</td>
-                    <td>Requests</td>
-                </tr>
-                <template v-if="Object.keys(overview.data).length == 0">
-                    <tr v-if="overview.loading">
-                        <td colspan="5" style="text-align: center; padding:1em">
-                            <v-progress-circular indeterminate :width="3"></v-progress-circular>
-                        </td>
+                <thead>
+                    <tr class="header">
+                        <th>App</th>
+                        <th>Earnings</th>
+                        <th>Impressions</th>
+                        <th>eCPM</th>
+                        <th>Requests</th>
                     </tr>
-                    <tr v-if="!overview.loading">
-                        <td colspan="5" style="text-align: center; padding:1em">
-                            <template v-if="overview.error.length > 0">
-                                <div style="text-align: center; padding: 2em;" v-html="overview.error">
-                                </div>
-                            </template>
-                        </td>
-                    </tr>
-                </template>
-                <template v-for="row in overview.data" v-bind:key="row">
-                    <tr class="stats">
-                        <td style="font-size:0.5em;">
-                            <b>{{ row.name }}</b>
-                            <br />
-                            {{ row.platform }}
-                        </td>
-                        <td>
-                            ${{ row.earnings }}
-                            <span :class="{ 'loss': row.delta.earnings < 0 }" v-if="row.previous">${{ row.previous.earnings }} ({{
-                                row.delta.earnings }}%)</span>
-                        </td>
-                        <td>
-                            {{ row.impressions }}
-                            <span :class="{ 'loss': row.delta.impressions < 0 }"
-                                v-if="row.previous">{{ row.previous.impressions }} ({{ row.delta.impressions }}%)</span>
-                        </td>
-                        <td>
-                            ${{ row.eCPM }}
-                            <span :class="{ 'loss': row.delta.eCPM < 0 }" v-if="row.previous">${{ row.previous.eCPM }} ({{
-                                row.delta.eCPM }}%)</span>
+                </thead>
+                <tbody>
+                    <template v-if="Object.keys(overview.data).length == 0">
+                        <tr v-if="overview.loading">
+                            <td colspan="5" style="text-align: center; padding:1em">
+                                <v-progress-circular indeterminate :width="3"></v-progress-circular>
+                            </td>
+                        </tr>
+                        <tr v-if="!overview.loading">
+                            <td colspan="5" style="text-align: center; padding:1em">
+                                <template v-if="overview.error.length > 0">
+                                    <div style="text-align: center; padding: 2em;" v-html="overview.error">
+                                    </div>
+                                </template>
+                            </td>
+                        </tr>
+                    </template>
+                    <template v-for="row in overview.data" v-bind:key="row">
+                        <tr class="stats">
+                            <td style="font-size:0.5em;">
+                                <b>{{ row.name }}</b>
+                                <br />
+                                {{ row.platform }}
+                            </td>
+                            <td>
+                                ${{ row.earnings }}
+                                <span :class="{ 'loss': row.delta.earnings < 0 }" v-if="row.previous">${{
+                                    row.previous.earnings
+                                }} ({{
+    row.delta.earnings }}%)</span>
+                            </td>
+                            <td>
+                                {{ row.impressions }}
+                                <span :class="{ 'loss': row.delta.impressions < 0 }" v-if="row.previous">{{
+                                    row.previous.impressions }} ({{ row.delta.impressions }}%)</span>
+                            </td>
+                            <td>
+                                ${{ row.eCPM }}
+                                <span :class="{ 'loss': row.delta.eCPM < 0 }" v-if="row.previous">${{ row.previous.eCPM }}
+                                    ({{
+                                        row.delta.eCPM }}%)</span>
 
-                        </td>
-                        <td>
-                            {{ row.requests }}
-                            <span :class="{ 'loss': row.delta.requests < 0 }" v-if="row.previous">{{ row.previous.requests }} ({{
-                                row.delta.requests }}%)</span>
-                        </td>
-                    </tr>
-                </template>
+                            </td>
+                            <td>
+                                {{ row.requests }}
+                                <span :class="{ 'loss': row.delta.requests < 0 }" v-if="row.previous">{{
+                                    row.previous.requests
+                                }} ({{
+    row.delta.requests }}%)</span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
             </v-table>
         </v-card-text>
     </v-card>
@@ -74,11 +83,11 @@
     table-layout: fixed;
 }
 
-table td {
-    padding: 4px;
+table tbody tr td {
+    padding: 12px !important;
 }
 
-table .header td {
+table .header th {
     font-size: 0.8em;
     padding-bottom: 12px;
 }

@@ -62,7 +62,7 @@
           </tr>
           <tr>
             <td class="icon">
-              <v-icon icon="mdi-account-group" size="x-large"></v-icon>
+              <v-icon icon="mdi-cash-multiple" size="x-large"></v-icon>
             </td>
             <td>
               Use the Network eCPM report to compare your eCPM with peers to find issues as 
@@ -71,7 +71,7 @@
           </tr>
           <tr>
             <td class="icon">
-              <v-icon icon="mdi-bell-badge" size="x-large"></v-icon>
+              <v-icon icon="mdi-table" size="x-large"></v-icon>
             </td>
             <td>
               Use the Data Explorer to navigate your AdMob data and gain new insights into
