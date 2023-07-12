@@ -34,7 +34,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="4">
+      <v-col cols="auto" xs="12" md="6">
         <v-card class="fill-height">
           <v-card-title>
             Donate
@@ -59,7 +59,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col cols="auto" xs="12" md="6">
         <v-card>
           <v-card-title>
             Contact Me

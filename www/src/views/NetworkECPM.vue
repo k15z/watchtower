@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="6">
+      <v-col xs="12" md="6">
         <v-card>
           <v-card-text>
             <v-table>
@@ -48,7 +48,7 @@
           </v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="6">
+      <v-col xs="12" md="6">
         <v-card class="fill-height">
           <v-card-text>
             <v-table>
