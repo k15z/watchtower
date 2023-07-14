@@ -13,7 +13,11 @@ import { realtimeQuery } from '../api'
 import { onMounted } from 'vue';
 
 const data = reactive({
-    options: {},
+    options: {
+        noData: {
+            text: 'Loading...'
+        }
+    } as any,
     series: [] as any
 })
 
@@ -44,7 +48,7 @@ onMounted(() => {
             },
             xaxis: {
                 categories: dataset.map((x: any) => formatDate(x.dimensionValues.DATE.value))
-            }
+            },
         }
         console.log(dataset)
         data.series = []

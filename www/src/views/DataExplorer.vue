@@ -13,8 +13,13 @@
           multiple></v-select>
       </v-col>
     </v-row>
+    <template v-if="table.loading">
+      <v-skeleton-loader type="table"></v-skeleton-loader>
+      </template>
+    <template v-if="!table.loading">
     <v-data-table v-model:items-per-page="table.itemsPerPage" :headers="table.headers" :items="table.rows"
       class="elevation-1 pb-4" density="compact"></v-data-table>
+    </template>
     <v-alert class="mt-4" elevation="1" style="text-align:center; font-size: 0.85rem;">Missing something? Let me know what
       features you think we should add <router-link to="/dashboard/settings">here</router-link>!</v-alert>
   </v-container>
@@ -23,6 +28,7 @@
 <script lang="ts" setup>
 import { reactive, watch } from 'vue'
 import { VDataTable } from 'vuetify/labs/VDataTable'
+import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader';
 import { realtimeQuery } from '../api'
 
 const inputs = reactive({
@@ -32,6 +38,7 @@ const inputs = reactive({
 })
 
 const table = reactive({
+  loading: true,
   itemsPerPage: 25,
   headers: [] as any,
   rows: [] as any,
@@ -51,7 +58,7 @@ function formatDate(datestr: string) {
 
 
 function renderTable() {
-
+  table.loading = true
   realtimeQuery(inputs.start, inputs.end, inputs.breakdowns).then(async (res) => {
     const dataset = await res.json()
 
@@ -95,6 +102,7 @@ function renderTable() {
       result["ESTIMATED_EARNINGS"] = "$" + result["ESTIMATED_EARNINGS"] / (1000.0 * 1000.0)
       table.rows.push(result)
     })
+    table.loading = false
   })
 }
 

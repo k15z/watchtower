@@ -255,7 +255,7 @@ function launchAuthorizationFlow() {
   client.requestCode()
 
   // Call a random API to warm up the Lambda function
-  helloWorld("date")
+  helloWorld()
 }
 
 function getTheApp() {

@@ -104,6 +104,43 @@ CREATE TABLE public.app (
 ALTER TABLE public.app OWNER TO postgres;
 
 --
+-- Name: app_external; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.app_external (
+    id integer NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    app_id integer NOT NULL,
+    metadata json NOT NULL,
+    genre character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.app_external OWNER TO postgres;
+
+--
+-- Name: app_external_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.app_external_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.app_external_id_seq OWNER TO postgres;
+
+--
+-- Name: app_external_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.app_external_id_seq OWNED BY public.app_external.id;
+
+
+--
 -- Name: app_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -326,6 +363,13 @@ ALTER TABLE ONLY public.app ALTER COLUMN id SET DEFAULT nextval('public.app_id_s
 
 
 --
+-- Name: app_external id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.app_external ALTER COLUMN id SET DEFAULT nextval('public.app_external_id_seq'::regclass);
+
+
+--
 -- Name: message id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -359,6 +403,14 @@ ALTER TABLE ONLY public.token ALTER COLUMN id SET DEFAULT nextval('public.token_
 
 ALTER TABLE ONLY public.ad_unit
     ADD CONSTRAINT ad_unit_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: app_external app_external_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.app_external
+    ADD CONSTRAINT app_external_pkey PRIMARY KEY (id);
 
 
 --
