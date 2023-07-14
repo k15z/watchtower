@@ -21,7 +21,8 @@ import { reactive } from 'vue'
 import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LGeoJson } from "@vue-leaflet/vue-leaflet";
 import { ecpmByBreakdowns } from '../api'
-import { countryCode3to2 } from '../country_codes'
+import countryGeoJSON from "@/assets/countries.geo.json"
+import countryCodeMap from "@/assets/countryCodeMap.json"
 
 function getColor(ecpm: number) {
     if (ecpm > 10.0) {
@@ -77,7 +78,7 @@ const settings = reactive({
     options: {
         onEachFeature: onEachFeature
     },
-    geojson: null
+    geojson: null as any
 })
 
 ecpmByBreakdowns("country").then((res) => {
@@ -87,21 +88,17 @@ ecpmByBreakdowns("country").then((res) => {
             countryToECPM[x.country] = x
         })
 
-        fetch(
-            "https://rawgit.com/johan/world.geo.json/master/countries.geo.json"
-        ).then(async (response: any) => {
-            const geojson = await response.json()
-            const filtered_features = [] as any
-            geojson.features.forEach((feature: any) => {
-                feature.properties.alpha2 = countryCode3to2[feature.id]
-                if (feature.properties.alpha2 in countryToECPM) {
-                    filtered_features.push(feature)
-                    feature.properties.ecpm = countryToECPM[feature.properties.alpha2].ecpm
-                }
-            })
-            geojson.features = filtered_features
-            settings.geojson = geojson
+        const filtered_features = [] as any
+        countryGeoJSON.features.forEach((feature: any) => {
+            // @ts-expect-error
+            feature.properties.alpha2 = countryCodeMap[feature.id]
+            if (feature.properties.alpha2 in countryToECPM) {
+                filtered_features.push(feature)
+                feature.properties.ecpm = countryToECPM[feature.properties.alpha2].ecpm
+            }
         })
+        countryGeoJSON.features = filtered_features
+        settings.geojson = countryGeoJSON
     })
 })
-</script>../country_codes
+</script>

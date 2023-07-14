@@ -134,48 +134,56 @@ function formatStatistics(row: any) {
     }
 }
 
-function updateOverview() {
+async function updateOverview() {
     overview.loading = true
     overview.data = []
     overview.error = ""
-    realtimeByApp(toggle.value, false).then((res) => {
-        if (!res.ok) {
-            overview.loading = false
-            overview.error = "Unable to fetch your data. Please make sure you're signed " +
-                "into the Google Account that is associated with your AdMob account."
-            return
-        }
-        res.json().then((res) => {
-            overview.loading = false
-            overview.data = res.map((row: any) => formatStatistics(row))
-            if (res.length == 0) {
-                overview.error = "You don't have any results for today yet."
-            }
 
-            realtimeByApp(toggle.value, true).then(async (res) => {
-                const app_platform_to_data = {} as any;
-                (await res.json()).map((row: any) => {
-                    row = formatStatistics(row)
-                    app_platform_to_data[row.app + row.platform] = row
-                })
+    // Load current interval
+    const current = realtimeByApp(toggle.value, false)
 
-                if (toggle.value != "1-day") {
-                    overview.data.forEach((element: any) => {
-                        let key = element.app + element.platform
-                        if (key in app_platform_to_data) {
-                            element.previous = app_platform_to_data[key]
-                            element.delta = {
-                                earnings: Math.round(1000.0 * (element.earnings - element.previous.earnings) / element.previous.earnings) / 10.0,
-                                impressions: Math.round(1000.0 * (element.impressions - element.previous.impressions) / element.previous.impressions) / 10.0,
-                                eCPM: Math.round(1000.0 * (element.eCPM - element.previous.eCPM) / element.previous.eCPM) / 10.0,
-                                requests: Math.round(1000.0 * (element.requests - element.previous.requests) / element.previous.requests) / 10.0,
-                            }
-                        }
-                    });
-                }
-            })
+    // Load previous interval (if applicable)
+    let previous = null;
+    if (toggle.value != "1-day") {
+        previous = await realtimeByApp(toggle.value, true)
+    }
+
+    // Update UI with current data
+    let response = await current
+    if (!response.ok) {
+        overview.loading = false
+        overview.error = "Unable to fetch your data. Please make sure you're signed " +
+            "into the Google Account that is associated with your AdMob account."
+        return
+    }
+    let result = await response.json()
+    overview.loading = false
+    overview.data = result.map((row: any) => formatStatistics(row))
+    if (result.length == 0) {
+        overview.error = "You don't have any results for today yet."
+    }
+
+    // If previous interval data is set...
+    if (previous) {
+        const app_platform_to_data = {} as any;
+        (await previous.json()).map((row: any) => {
+            row = formatStatistics(row)
+            app_platform_to_data[row.app + row.platform] = row
         })
-    })
+
+        overview.data.forEach((element: any) => {
+            let key = element.app + element.platform
+            if (key in app_platform_to_data) {
+                element.previous = app_platform_to_data[key]
+                element.delta = {
+                    earnings: Math.round(1000.0 * (element.earnings - element.previous.earnings) / element.previous.earnings) / 10.0,
+                    impressions: Math.round(1000.0 * (element.impressions - element.previous.impressions) / element.previous.impressions) / 10.0,
+                    eCPM: Math.round(1000.0 * (element.eCPM - element.previous.eCPM) / element.previous.eCPM) / 10.0,
+                    requests: Math.round(1000.0 * (element.requests - element.previous.requests) / element.previous.requests) / 10.0,
+                }
+            }
+        });
+    }
 }
 
 updateOverview()
