@@ -21,16 +21,22 @@ app.api.cors = True
 sqs = boto3.client("sqs")
 
 
+@app.route("/hello")
+def _index():
+    return {"hello": "world"}
+
+
 @app.route("/authorize", methods=["POST"])
 def _post_authorize():
     body = app.current_request.json_body
     auth_code = body["auth_code"]
     with connection() as conn:
-        account_id, token = authorize(conn, auth_code)
-        sqs.send_message(
-            QueueUrl="https://sqs.us-east-1.amazonaws.com/082395104119/WatchtowerNewUserAuth",
-            MessageBody=str(account_id),
-        )
+        account_id, token, needs_backfill = authorize(conn, auth_code)
+        if needs_backfill:
+            sqs.send_message(
+                QueueUrl="https://sqs.us-east-1.amazonaws.com/082395104119/WatchtowerNewUserAuth",
+                MessageBody=str(account_id),
+            )
         return {
             "id": account_id,
             "token": token,

@@ -3,6 +3,7 @@ import os
 import pickle
 import uuid
 import json
+from typing import Tuple
 
 from google.auth.transport.requests import Request
 from google.oauth2 import id_token
@@ -35,7 +36,7 @@ def authenticate(conn, google_token: str) -> str:
     return _generate_auth_token(conn, row["id"])
 
 
-def authorize(conn, auth_code: str) -> str:
+def authorize(conn, auth_code: str) -> Tuple[int, str, bool]:
     client_secrets = os.path.join(os.path.dirname(__file__), "secrets.json")
     flow = Flow.from_client_secrets_file(
         client_secrets, scopes=["https://www.googleapis.com/auth/admob.readonly"]
@@ -53,15 +54,15 @@ def authorize(conn, auth_code: str) -> str:
         .execute()
     )
     publisher_ids = [account["publisherId"] for account in response["account"]]
-    notify("New Authorization", json.dumps(idinfo))
     
 
     with conn.cursor() as cursor:
         # Insert account profile
-        cursor.execute("SELECT id FROM account WHERE email = %s", (idinfo["email"],))
+        cursor.execute("SELECT id, status FROM account WHERE email = %s", (idinfo["email"],))
         row = cursor.fetchone()
         if row:
             account_id = row["id"]
+            needs_backfill = row["status"] == "ERROR"
             cursor.execute(
                 "UPDATE account SET credentials = %s WHERE id = %s",
                 (
@@ -81,6 +82,8 @@ def authorize(conn, auth_code: str) -> str:
                 ),
             )
             account_id = cursor.fetchone()["id"]
+            needs_backfill = True
+            notify("New Authorization", json.dumps(idinfo))
 
         # Insert publisher IDs
         cursor.executemany(
@@ -89,7 +92,7 @@ def authorize(conn, auth_code: str) -> str:
         )
     conn.commit()
 
-    return account_id, _generate_auth_token(conn, account_id)
+    return account_id, _generate_auth_token(conn, account_id), needs_backfill
 
 
 def generate_api_key(conn, account_id):

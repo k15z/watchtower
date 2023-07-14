@@ -199,7 +199,7 @@ table.footer a:hover {
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import router from '../router'
-import { BASE_API_URL, ecpmByBreakdowns } from '../api'
+import { BASE_API_URL, helloWorld } from '../api'
 import { store } from '../store'
 import { event } from 'vue-gtag'
 
@@ -255,7 +255,7 @@ function launchAuthorizationFlow() {
   client.requestCode()
 
   // Call a random API to warm up the Lambda function
-  ecpmByBreakdowns("date")
+  helloWorld("date")
 }
 
 function getTheApp() {
