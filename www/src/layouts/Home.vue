@@ -4,7 +4,8 @@
       <v-img height="300" src="@/assets/logo.png" />
 
       <h1 class="text-h3 font-weight-bold">AdMob Watchtower</h1>
-      <div class="text-body-1 font-weight-light mb-n1">A third-party app for bringing transparency to the AdMob network.</div>
+      <div class="text-body-1 font-weight-light mb-n1">A third-party app for bringing transparency to the AdMob network.
+      </div>
 
       <div class="py-14" />
 
@@ -39,7 +40,6 @@
         <v-col cols="auto">
           <v-btn @click="getTheApp" min-width="164" rel="noopener noreferrer" variant="text">
             <v-icon icon="mdi-cellphone" size="medium" start />
-
             Get The App
           </v-btn>
         </v-col>
@@ -65,7 +65,7 @@
               <v-icon icon="mdi-cash-multiple" size="x-large"></v-icon>
             </td>
             <td>
-              Use the Network eCPM report to compare your eCPM with peers to find issues as 
+              Use the Network eCPM report to compare your eCPM with peers to find issues as
               well as opportunities.
             </td>
           </tr>
@@ -119,9 +119,13 @@
   <v-container class="pb-16">
     <v-row>
       <v-col>
-        <v-img :width="640" src="@/assets/map.png" />
+        <h1 class="text-h5 font-weight-bold">Data Explorer</h1>
+        Explore your realtime AdMob statistics with the built-in data explorer to see all your data in one place.
+        <img style="max-width: 100%;" src="@/assets/overview.png" />
       </v-col>
-      <v-col>
+    </v-row>
+    <v-row class="pt-16">
+      <v-col cols="auto" md="6" sm="12">
         <h1 class="text-h5 font-weight-bold">Network eCPM</h1>
         <p>
           Understand the state of the market by exploring eCPM breakdowns based on:
@@ -130,20 +134,36 @@
           <li>Time</li>
           <li>Format</li>
           <li>Country</li>
-          <li>App category</li>
+          <li>App genre</li>
           <li>Personalization</li>
         </ul>
-        <p>
-          Discover issues and find new opportunities with the <b>Network eCPM</b> report which 
-          provides you with the latest data from across our network.
-        </p>
+        Discover issues and find new opportunities with the Network eCPM report which provides you with the latest data
+        from across our network.
+      </v-col>
+      <v-col cols="auto" md="6" sm="12">
+        <div style="text-align:center;">
+          <img style="max-width: 100%; border: 3px solid #ddd; border-radius: 10px;" src="@/assets/map.png" />
+        </div>
       </v-col>
     </v-row>
-    <v-row class="pt-16">
-      <v-col>
-        <h1 class="text-h5 font-weight-bold">Data Explorer</h1>
-        Explore your realtime AdMob statistics with the built-in data explorer to see all your data in one place.
-        <v-img src="@/assets/overview.png" />
+  </v-container>
+  <v-container class="pb-16">
+    <v-row>
+      <v-col cols="auto" md="6" sm="12">
+        <h1 class="text-h5 font-weight-bold">Open Source</h1>
+        <p>
+          Explore the <a href="https://github.com/k15z/watchtower/">code base</a> on GitHub. Feel free to jump in and
+          pick up an issue or two to work on - contributions are greatly appreciated. Or, if you want to build something
+          on top of our platform, you can sign in and generate an API key to develop against the Watchtower API.
+        </p>
+      </v-col>
+      <v-col cols="auto" md="6" sm="12">
+        <h1 class="text-h5 font-weight-bold">Privacy Preserving</h1>
+        <p>
+          All of your data is anonymized and aggregated prior to being included in the Network eCPM report. We protect
+          all your data, but we take special steps to protect sensitive attributes such as your identity, your apps,
+          and your total revenue.
+        </p>
       </v-col>
     </v-row>
   </v-container>
@@ -162,6 +182,23 @@
   </v-container>
   <v-overlay :model-value="state.is_validating" class="align-center justify-center">
     <v-progress-circular color="primary" indeterminate size="64"></v-progress-circular>
+  </v-overlay>
+  <v-overlay :model-value="state.show_app_preview" class="align-center justify-center" @afterLeave="state.show_app_preview=false">
+    <v-card class="pa-4" max-width="480">
+      <v-card-title>
+        Coming Soon
+      </v-card-title>
+      <v-card-text>
+        <p>
+          We're hard at work building Watchtower for iOS and Android! Sign up here to get notified when
+          the release is ready and to get early access to developer builds.
+        </p>
+        <p class="pt-4">
+          <v-text-field v-model="state.email" label="Email address" type="email" placeholder="me@kevz.dev"></v-text-field>
+        </p>
+        <v-btn @click="subscribe" color="primary" block>Subscribe</v-btn>
+      </v-card-text>
+    </v-card>
   </v-overlay>
 </template>
 
@@ -199,12 +236,14 @@ table.footer a:hover {
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import router from '../router'
-import { BASE_API_URL, helloWorld } from '../api'
+import { BASE_API_URL, helloWorld, sendMessage } from '../api'
 import { store } from '../store'
 import { event } from 'vue-gtag'
 
 const state = reactive({
+  email: '',
   is_validating: false,
+  show_app_preview: false,
   is_signed_in: localStorage.getItem("token") ? true : false
 })
 
@@ -260,6 +299,12 @@ function launchAuthorizationFlow() {
 
 function getTheApp() {
   event("get_the_app", {})
-  alert("Coming soon!")
+  state.show_app_preview = true
+}
+
+function subscribe() {
+  sendMessage(state.email, "Let me know when the app is ready!");
+  state.email = '';
+  state.show_app_preview = false
 }
 </script>

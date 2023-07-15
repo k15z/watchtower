@@ -110,7 +110,10 @@ def _post_account_message():
     auth = app.current_request.headers.get("Authorization", None)
     token = auth.split()[1]
     with connection() as conn:
-        id = get_account_id(conn, token)
+        try:
+            id = get_account_id(conn, token)
+        except:
+            id = None
         body = app.current_request.json_body
         body["email"], body["message"]
         return insert_message(conn, id, body["email"], body["message"])

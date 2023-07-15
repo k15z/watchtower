@@ -71,7 +71,7 @@
             </p>
             <v-text-field v-model="data.email" label="Email" placeholder="hello@kevz.dev" type="email"></v-text-field>
             <v-textarea v-model="data.message" label="Message" placeholder="Say hello!"></v-textarea>
-            <v-btn @click="sendMessage" block>Submit</v-btn>
+            <v-btn @click="callSendMessage" block>Submit</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
@@ -86,7 +86,7 @@
 <script lang="ts" setup>
 import router from "../router"
 import { store } from "@/store"
-import { BASE_API_URL } from "@/api";
+import { BASE_API_URL, sendMessage } from "@/api";
 import { reactive } from 'vue'
 import { event } from 'vue-gtag'
 
@@ -124,20 +124,9 @@ function revokeAPIKeys() {
   })
 }
 
-function sendMessage() {
-  event('send_message', {email: data.email})
-  return fetch(BASE_API_URL + "/account/message", {
-    method: 'POST',
-    mode: 'cors',
-    headers: {
-      'Authorization': `Bearer ${store.token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      email: data.email,
-      message: data.message
-    })
-  }).then(async (res) => {
+function callSendMessage() {
+  event('send_message', { email: data.email })
+  sendMessage(data.email, data.message).then(async (res) => {
     data.email = ''
     data.message = ''
   })
