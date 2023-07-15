@@ -67,10 +67,18 @@ function onEachFeature(feature: any, layer: any) {
         },
     });
     layer.setStyle(defaultStyle)
-    layer.bindTooltip(`
-            <b>Country:</b> ${feature.id}<br/>
-            <b>eCPM:</b> ${feature.properties.ecpm}
+    if (feature.properties.your_ecpm) {
+        layer.bindTooltip(`
+            <b>Country:</b> ${feature.properties.name}<br/>
+            <b>Network eCPM:</b> ${feature.properties.ecpm}<br/>
+            <b>Your eCPM:</b> ${feature.properties.your_ecpm}
             `)
+    } else {
+        layer.bindTooltip(`
+            <b>Country:</b> ${feature.properties.name}<br/>
+            <b>eCPM:</b> ${feature.properties.ecpm}<br/>
+            `)
+    }
 }
 
 const settings = reactive({
@@ -95,6 +103,7 @@ ecpmByBreakdowns("country").then((res) => {
             if (feature.properties.alpha2 in countryToECPM) {
                 filtered_features.push(feature)
                 feature.properties.ecpm = countryToECPM[feature.properties.alpha2].ecpm
+                feature.properties.your_ecpm = countryToECPM[feature.properties.alpha2].your_ecpm
             }
         })
         countryGeoJSON.features = filtered_features

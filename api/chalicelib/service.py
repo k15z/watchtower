@@ -53,6 +53,7 @@ def sync_dataset(conn):
         try:
             service = build_admob_service(conn, account_id)
             _fetch_admob_data(conn, service, date)
+            _fetch_apps_and_ad_units(conn, service)
         except Exception as e:
             print("Error updating", account_id, e)
             with conn.cursor() as cursor:
@@ -60,6 +61,7 @@ def sync_dataset(conn):
                     "UPDATE account SET status = 'ERROR' WHERE id = %s", (account_id,)
                 )
             conn.commit()
+    _fetch_app_json(conn)
 
 
 def _fetch_apps_and_ad_units(conn, service):

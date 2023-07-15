@@ -11,7 +11,8 @@
               <v-row no-gutters>
                 <v-col>
                   <p class="pb-4">
-                    Developers can interact with Watchtower via the <a class="text-decoration-none" href="/api.html">REST API</a> which allows you to
+                    Developers can interact with Watchtower via the <a class="text-decoration-none" href="/api.html">REST
+                      API</a> which allows you to
                     fetch both your raw AdMob data and the network eCPM comparison report. If you
                     plan on querying the API frequently, please consider donating to support this
                     project; otherwise, I reserve the right to apply rate limiting at any time in
@@ -91,7 +92,8 @@ a.text-decoration-none {
 
 a.text-decoration-none:hover {
   color: #B83120;
-}</style>
+}
+</style>
 
 <script lang="ts" setup>
 import router from "../router"
@@ -143,18 +145,20 @@ function callSendMessage() {
 }
 
 function deleteAccount() {
-  event('delete_account', {})
-  return fetch(BASE_API_URL + "/account", {
-    method: 'DELETE',
-    mode: 'cors',
-    headers: {
-      'Authorization': `Bearer ${store.token}`,
-      'Content-Type': 'application/json'
-    },
-  }).then(async (res) => {
-    localStorage.clear()
-    router.push("/")
-  })
+  if (window.confirm("Are you sure you want to delete your accout?")) {
+    event('delete_account', {})
+    return fetch(BASE_API_URL + "/account", {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Authorization': `Bearer ${store.token}`,
+        'Content-Type': 'application/json'
+      },
+    }).then(async (res) => {
+      localStorage.clear()
+      router.push("/")
+    })
+  }
 }
 
 function signOut() {
