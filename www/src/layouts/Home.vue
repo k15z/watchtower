@@ -152,9 +152,9 @@
       <v-col cols="auto" md="6" sm="12">
         <h1 class="text-h5 font-weight-bold">Open Source</h1>
         <p>
-          Explore the <a href="https://github.com/k15z/watchtower/">code base</a> on GitHub. Feel free to jump in and
+          Explore the <a class="text-decoration-none" href="https://github.com/k15z/watchtower/">code base</a> on GitHub. Feel free to jump in and
           pick up an issue or two to work on - contributions are greatly appreciated. Or, if you want to build something
-          on top of our platform, you can sign in and generate an API key to develop against the Watchtower API.
+          on top of our platform, you can sign in and generate an API key to develop against the <a class="text-decoration-none" href="/api.html">Watchtower API</a>.
         </p>
       </v-col>
       <v-col cols="auto" md="6" sm="12">
@@ -220,7 +220,7 @@ table.footer {
   font-size: 0.8rem;
 }
 
-table.footer a {
+a.text-decoration-none {
   color: #D85140;
 }
 
@@ -228,7 +228,7 @@ table.footer .text-end a {
   padding-left: 12px;
 }
 
-table.footer a:hover {
+a.text-decoration-none:hover {
   color: #B83120;
 }
 </style>

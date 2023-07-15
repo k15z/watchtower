@@ -11,7 +11,7 @@
               <v-row no-gutters>
                 <v-col>
                   <p class="pb-4">
-                    Developers can interact with Watchtower via the REST API which allows you to
+                    Developers can interact with Watchtower via the <a class="text-decoration-none" href="/api.html">REST API</a> which allows you to
                     fetch both your raw AdMob data and the network eCPM comparison report. If you
                     plan on querying the API frequently, please consider donating to support this
                     project; otherwise, I reserve the right to apply rate limiting at any time in
@@ -82,6 +82,16 @@
     </div>
   </v-container>
 </template>
+
+<style scoped>
+a.text-decoration-none {
+  color: #D85140;
+}
+
+
+a.text-decoration-none:hover {
+  color: #B83120;
+}</style>
 
 <script lang="ts" setup>
 import router from "../router"
