@@ -33,13 +33,13 @@ ecpmByBreakdowns("week,format").then((res) => {
           rotate: -45,
           rotateAlways: true,
         },
-        categories: res.week,
+        categories: res.week.slice(-8, -1),
       },
     }
     res.series.forEach((x: any) => {
       chart.series.push({
         name: x.breakdown,
-        data: x.data,
+        data: x.data.slice(-8, -1),
       })
     });
   })

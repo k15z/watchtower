@@ -13,7 +13,7 @@ from api.chalicelib.db import connection
 class WeeklySummaryWriter:
     """Summarize the week-over-week eCPM across various breakdowns."""
 
-    OUTLIER_THRESHOLD = 20.0
+    OUTLIER_THRESHOLD = 10.0
     MIN_IMPRESSION_COUNT = 1000
 
     def __init__(self, end_date=None):
