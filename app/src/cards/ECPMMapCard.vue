@@ -1,0 +1,25 @@
+<template>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-subtitle>eCPM Map</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+            <div style="height:360px; width:100%">
+                <l-map ref="map" :zoom="2" :center="[47.41322, -1.219482]" :use-global-leaflet="false" :options="{ attributionControl: false }">
+                    <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
+                        name="OpenStreetMap"></l-tile-layer>
+                </l-map>
+            </div>
+        </ion-card-content>
+    </ion-card>
+</template>
+  
+<script setup lang="ts">
+import { IonCard, IonCardHeader, IonCardSubtitle, IonCardContent } from '@ionic/vue';
+
+import "leaflet/dist/leaflet.css";
+import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
+</script>
+  
+<style></style>

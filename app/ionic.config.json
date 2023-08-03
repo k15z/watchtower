@@ -1,0 +1,7 @@
+{
+  "name": "Watchtower",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
