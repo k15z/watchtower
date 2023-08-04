@@ -19,7 +19,12 @@
           <ion-card-subtitle>{{ card.name }}</ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
-          {{ card.description }}
+          <p>
+            {{ card.description }}
+          </p>
+          <div>
+            <ion-chip :outline="true" v-for="tag in card.tags">{{ tag }}</ion-chip>
+          </div>
         </ion-card-content>
       </ion-card>
 
@@ -38,9 +43,12 @@
           <template v-if="selectedCard">
             <div>
               <h1 style="text-align: center;">{{ selectedCard.name }}</h1>
-              <p style="text-align: justify;">{{ selectedCard.description }}</p>
+              <p style="text-align: left;">{{ selectedCard.description }}</p>
+              <div style="padding-bottom:1em;">
+                <ion-chip :outline="true" v-for="tag in selectedCard.tags">{{ tag }}</ion-chip>
+              </div>
             </div>
-            <component style="margin:0px;" :is="selectedCard.component"></component>
+            <component style="margin:0px;" :is="selectedCard.component" :options="selectedCard.options"></component>
           </template>
         </ion-content>
       </ion-modal>
@@ -52,11 +60,16 @@
 ion-card-header {
   padding-bottom: 0px;
 }
+
+ion-chip {
+  margin-left: 0;
+  font-size: 0.8em;
+}
 </style>
 
 <script setup lang="ts">
 import { ref, shallowRef, computed } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonButton, IonButtons, IonModal, IonTitle, IonContent, IonSearchbar, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonButton, IonButtons, IonModal, IonChip, IonTitle, IonContent, IonSearchbar, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent } from '@ionic/vue';
 import { cardDefinitions } from '@/cards';
 import { overviewCards } from '@/state'
 
@@ -66,6 +79,7 @@ const filteredCardDefinitions = computed(() => {
   Object.keys(cardDefinitions).map((key: string) => {
     if (
       cardDefinitions[key].name.toLowerCase().includes(query.value.toLowerCase()) ||
+      cardDefinitions[key].tags.join(" ").toLowerCase().includes(query.value.toLowerCase()) ||
       cardDefinitions[key].description.toLowerCase().includes(query.value.toLowerCase())
     ) {
       filteredDefs[key] = cardDefinitions[key]
@@ -89,7 +103,7 @@ const previewCard = (card: any) => {
 const addCard = (card: any) => {
   overviewCards.push({
     key: card.key,
-    options: {}
+    options: card.options || {}
   })
   showModal.value = false
 }

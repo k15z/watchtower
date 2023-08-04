@@ -31,7 +31,7 @@
       </ion-reorder-group>
 
       <ion-fab slot="fixed" vertical="top" horizontal="end" edge="true">
-        <ion-fab-button @click="toggleEditable" size="small" color="dark">
+        <ion-fab-button @click="toggleEditable" size="small" color="medium">
           <ion-icon :icon="editable ? closeOutline : pencilOutline" size="small"></ion-icon>
         </ion-fab-button>
       </ion-fab>

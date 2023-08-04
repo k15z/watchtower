@@ -5,8 +5,8 @@
         </ion-card-header>
 
         <ion-card-content>
-            <div style="height:360px; width:100%">
-                <l-map ref="map" :zoom="2" :center="[47.41322, -1.219482]" :use-global-leaflet="false" :options="{ attributionControl: false }">
+            <div style="height:300px; width:100%">
+                <l-map ref="map" :zoom="3" :center="[39.8282, -98.5796]" :use-global-leaflet="false" :options="{ attributionControl: false }">
                     <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" layer-type="base"
                         name="OpenStreetMap"></l-tile-layer>
                 </l-map>
