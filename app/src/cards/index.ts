@@ -1,9 +1,10 @@
-import EarningsCard from "./EarningsCard.vue";
+import TimeSeriesPlot from "./TimeSeriesPlot.vue";
 import ReportCard from "./ReportCard.vue";
 import ECPMSummaryCard from "./ECPMSummaryCard.vue";
 import PlatformECPMCard from "./PlatformECPMCard.vue";
 import ECPMMapCard from "./ECPMMapCard.vue"
 import EarningsByApp from "./EarningsByApp.vue"
+import EarningsByDayOfWeek from "./EarningsByDayOfWeek.vue"
 
 
 enum Tag {
@@ -28,13 +29,6 @@ interface CardDefinition {
 
 const cardDefinitionsRaw: CardDefinition[] = [
     {
-        'key': 'EarningsCard',
-        'name': '7-Day Earnings Card',
-        'description': 'This displays a bar chart containing the earnings over the past 7 days (not including today).',
-        'component': EarningsCard,
-        'tags': [Tag.Graphical]
-    },
-    {
         'key': 'ReportCard',
         'name': 'Report Card',
         'description': 'This displays the earnings, impressions, requests, and eCPM for the most recent 1, 7, or 28 days.',
@@ -42,18 +36,32 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'tags': [Tag.Interactive, Tag.Numerical]
     },
     {
-        'key': 'ECPMSummaryCard',
-        'name': 'ECPM Summary Card',
-        'description': 'This displays a text-based summary of the eCPM of the entire network over the past week compared to the previous week.',
-        'component': ECPMSummaryCard,
-        'tags': [Tag.Public, Tag.Textual]
+        'key': 'TimeSeriesPlot',
+        'name': '7-Day Time Series',
+        'description': 'This displays a bar chart containing the earnings, impressions, and requests for the past 7 days.',
+        'component': TimeSeriesPlot,
+        'tags': [Tag.Interactive, Tag.Graphical]
     },
     {
         'key': 'PlatformECPMCard',
         'name': 'Platform ECPM Card',
         'description': 'This displays a breakdown of the current network eCPM across different platforms and for different ad formats.',
         'component': PlatformECPMCard,
-        'tags': [Tag.Public, Tag.Textual],
+        'tags': [Tag.Public, Tag.Numerical],
+    },
+    {
+        'key': 'EarningsByDayOfWeek',
+        'name': 'Earnings By Day Of Week',
+        'description': 'This displays a bar plot showing average earnings on each day of the week to let you explore weekly seasonal patterns.',
+        'component': EarningsByDayOfWeek,
+        'tags': [Tag.Graphical]
+    },
+    {
+        'key': 'ECPMSummaryCard',
+        'name': 'ECPM Summary Card',
+        'description': 'This displays a text-based summary of the eCPM of the entire network over the past week compared to the previous week.',
+        'component': ECPMSummaryCard,
+        'tags': [Tag.Public, Tag.Textual]
     },
     {
         'key': 'ECPMMapCard',

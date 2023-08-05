@@ -13,7 +13,7 @@
       </ion-header>
 
       <ion-reorder-group :disabled="!editable" @ionItemReorder="handleReorder($event)">
-        <template v-for="(card, idx) in overviewCards">
+        <template v-for="(card, idx) in overviewCards" :key="card.key">
           <div>
             <component :is="cardDefinitions[card.key].component" :options="card.options"></component>
             <div class="edit-menu" v-if="editable">
@@ -57,10 +57,7 @@ const deleteCard = (idx: number) => {
 
 }
 const handleReorder = (event: CustomEvent) => {
-  const swap = overviewCards[event.detail.from]
-  overviewCards[event.detail.from] = overviewCards[event.detail.to]
-  overviewCards[event.detail.to] = swap
-  event.detail.complete(false);
+  event.detail.complete(overviewCards);
 };
 </script>
 

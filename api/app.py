@@ -14,6 +14,7 @@ from chalicelib.network import network_ecpm
 from chalicelib.realtime import realtime_by_app, realtime_query
 from chalicelib.service import backfill_account, sync_dataset
 from chalicelib.utils import get_account_id
+from chalicelib.cards import handle_card
 
 app = Chalice(app_name="watchtower-api")
 app.api.cors = True
@@ -173,6 +174,21 @@ def _realtime_query():
         start, end = _parse_start_end(app.current_request.query_params)
         breakdowns = app.current_request.query_params.get("breakdowns", "").split(",")
         return realtime_query(conn, id, start, end, breakdowns)
+
+@app.route("/card", methods=["POST"])
+def _card_based_query():
+    auth = app.current_request.headers.get("Authorization", None)
+    if auth:
+        token = auth.split()[1]
+        with connection() as conn:
+            try:
+                id = get_account_id(conn, token)
+            except ValueError:
+                id = None
+    else:
+        id = None
+    body = app.current_request.json_body
+    return handle_card(body['name'], body['options'], user_id=id).dict()
 
 
 @app.on_sqs_message(queue="WatchtowerNewUserAuth")
