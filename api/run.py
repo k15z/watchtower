@@ -15,6 +15,6 @@ from chalicelib.cards import handle_card
 
 print(
     handle_card(
-        name="TimeSeriesPlotV1", options={"date_filter": {"interval": "week"}}, user_id=8
+        name="EarningsByDayOfWeekV1", options={"date_filter": {"interval": "week"}}, user_id=8
     ).dict()
 )

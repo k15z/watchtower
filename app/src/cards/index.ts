@@ -56,6 +56,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': EarningsByDayOfWeek,
         'tags': [Tag.Graphical]
     },
+    /*
     {
         'key': 'ECPMSummaryCard',
         'name': 'ECPM Summary Card',
@@ -86,6 +87,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'tags': [Tag.Numerical],
         'options': {'interval': 'week'}
     },
+    */
 ]
 
 const cardDefinitions: Record<string, any> = {}

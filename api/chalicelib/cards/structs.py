@@ -188,18 +188,30 @@ class ReportCardV1(BaseCard):
             )
             result["impressions"] = IntCurrentAndPrevious(
                 current=int(current[0]["metricValues"]["IMPRESSIONS"]["integerValue"]),
-                previous=int(previous[0]["metricValues"]["IMPRESSIONS"]["integerValue"]),
+                previous=int(
+                    previous[0]["metricValues"]["IMPRESSIONS"]["integerValue"]
+                ),
             )
             result["ad_requests"] = IntCurrentAndPrevious(
                 current=int(current[0]["metricValues"]["AD_REQUESTS"]["integerValue"]),
-                previous=int(previous[0]["metricValues"]["AD_REQUESTS"]["integerValue"]),
+                previous=int(
+                    previous[0]["metricValues"]["AD_REQUESTS"]["integerValue"]
+                ),
             )
             result["ecpm"] = FloatCurrentAndPrevious(
                 current=result["estimated_earnings"].current
-                / (result["impressions"].current if result["impressions"].current else float('nan'))
+                / (
+                    result["impressions"].current
+                    if result["impressions"].current
+                    else float("nan")
+                )
                 * 1000.0,
                 previous=result["estimated_earnings"].previous
-                / (result["impressions"].previous if result["impressions"].previous else float('nan'))
+                / (
+                    result["impressions"].previous
+                    if result["impressions"].previous
+                    else float("nan")
+                )
                 * 1000.0,
             )
             if math.isnan(result["ecpm"].current):
@@ -263,8 +275,10 @@ class PlatformECPMV1(BaseCard):
 
 # ---
 
+
 def format_date(yyyymmdd):
     return "{}-{}-{}".format(yyyymmdd[:4], yyyymmdd[4:6], yyyymmdd[6:])
+
 
 class TimeSeriesPlotV1Options(BaseModel):
     user_id: int
@@ -297,18 +311,107 @@ class TimeSeriesPlotV1(BaseCard):
                 options.date_filter, account["reportingTimeZone"]
             )
 
-            result["currency_code"], rows = _get_basics(service, start, end, account["publisherId"], dimensions=["DATE"])
+            result["currency_code"], rows = _get_basics(
+                service, start, end, account["publisherId"], dimensions=["DATE"]
+            )
             for row in rows:
-                result["rows"].append({
-                    "date": format_date(row["dimensionValues"]["DATE"]["value"]),
-                    "estimated_earnings": int(row["metricValues"]["ESTIMATED_EARNINGS"]["microsValue"]) / (1000.0 * 1000.0),
-                    "impressions": int(row["metricValues"]["IMPRESSIONS"]["integerValue"]),
-                    "ad_requests": int(row["metricValues"]["AD_REQUESTS"]["integerValue"]),
-                })
+                result["rows"].append(
+                    {
+                        "date": format_date(row["dimensionValues"]["DATE"]["value"]),
+                        "estimated_earnings": int(
+                            row["metricValues"]["ESTIMATED_EARNINGS"]["microsValue"]
+                        )
+                        / (1000.0 * 1000.0),
+                        "impressions": int(
+                            row["metricValues"]["IMPRESSIONS"]["integerValue"]
+                        ),
+                        "ad_requests": int(
+                            row["metricValues"]["AD_REQUESTS"]["integerValue"]
+                        ),
+                    }
+                )
         return TimeSeriesPlotV1(**result)
 
 
 # ---
 
+
+class EarningsByDayOfWeekV1Row(BaseModel):
+    day_of_week: str
+    min: float
+    p25: float
+    p50: float
+    p75: float
+    max: float
+
+
+class EarningsByDayOfWeekOptions(BaseModel):
+    user_id: int
+
+
+class EarningsByDayOfWeekV1(BaseCard):
+    rows: List[EarningsByDayOfWeekV1Row]
+
+    @classmethod
+    @validate_arguments
+    def build(self, options: EarningsByDayOfWeekOptions):
+        rows = []
+        with connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT
+                    to_char(date, 'Day') as day_of_week,
+                        MIN(earnings) as min,
+                        PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY earnings) as P25,
+                        PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY earnings) as P50,
+                        PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY earnings) as P75,
+                        ( -- max = 1.5*IQR + Q3
+                            (PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY earnings)) + 
+                            1.5 * ((PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY earnings)) - PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY earnings))
+                        ) as max
+                    FROM (
+                    SELECT
+                        date,
+                        SUM(earnings) as earnings
+                    FROM record
+                    LEFT JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
+                    LEFT JOIN app ON ad_unit.admob_app_id = app.admob_app_id
+                    LEFT JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
+                    LEFT JOIN account ON publisher.account_id = account.id
+                    WHERE account.id = %s
+                    GROUP BY date
+                    ) x
+                    GROUP BY day_of_week
+                    """,
+                    (options.user_id,),
+                )
+                for row in cursor.fetchall():
+                    rows.append(
+                        EarningsByDayOfWeekV1Row(
+                            day_of_week=row["day_of_week"].strip(),
+                            min=float(row["min"]) / (1000.0 * 1000.0),
+                            p25=float(row["p25"]) / (1000.0 * 1000.0),
+                            p50=float(row["p50"]) / (1000.0 * 1000.0),
+                            p75=float(row["p75"]) / (1000.0 * 1000.0),
+                            max=float(row["max"]) / (1000.0 * 1000.0),
+                        )
+                    )
+        rows = sorted(
+            rows,
+            key=lambda row: [
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+                "Sunday",
+            ].index(row.day_of_week),
+        )
+        return EarningsByDayOfWeekV1(rows=rows)
+
+
+# ---
 
 card_name_to_class = {card.__name__: card for card in BaseCard.__subclasses__()}
