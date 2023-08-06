@@ -12,7 +12,11 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-reorder-group :disabled="!editable" @ionItemReorder="handleReorder($event)">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content></ion-refresher-content>
+      </ion-refresher>
+
+      <ion-reorder-group :key="componentKey" :disabled="!editable" @ionItemReorder="handleReorder($event)">
         <template v-for="(card, idx) in overviewCards" :key="card.key">
           <div>
             <component :is="cardDefinitions[card.key].component" :options="card.options"></component>
@@ -43,10 +47,11 @@
 import { ref } from 'vue'
 import { overviewCards } from '@/state'
 import { cardDefinitions } from '@/cards';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonReorder, IonButton, IonFab, IonIcon, IonFabButton, IonReorderGroup } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonReorder, IonButton, IonFab, IonIcon, IonFabButton, IonReorderGroup, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { closeOutline, reorderThreeOutline, trashOutline, pencilOutline } from 'ionicons/icons';
 
 const editable = ref(false)
+const componentKey = ref(0)
 
 const toggleEditable = async () => {
   editable.value = !editable.value
@@ -59,6 +64,11 @@ const deleteCard = (idx: number) => {
 const handleReorder = (event: CustomEvent) => {
   event.detail.complete(overviewCards);
 };
+
+const handleRefresh = (event: any) => {
+  componentKey.value += 1
+  event.target.complete();
+}
 </script>
 
 <style scoped>

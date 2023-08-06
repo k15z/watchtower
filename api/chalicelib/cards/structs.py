@@ -1,3 +1,4 @@
+import math
 from enum import Enum
 from typing import TypeVar, List, Union, Optional
 from zoneinfo import ZoneInfo
@@ -154,6 +155,26 @@ class ReportCardV1(BaseCard):
                 - (_get_time_delta(options.date_filter.interval) + timedelta(days=1)),
                 account["publisherId"],
             )
+            if not current:
+                current = [
+                    {
+                        "metricValues": {
+                            "ESTIMATED_EARNINGS": {"microsValue": 0},
+                            "IMPRESSIONS": {"integerValue": 0},
+                            "AD_REQUESTS": {"integerValue": 0},
+                        }
+                    }
+                ]
+            if not previous:
+                previous = [
+                    {
+                        "metricValues": {
+                            "ESTIMATED_EARNINGS": {"microsValue": 0},
+                            "IMPRESSIONS": {"integerValue": 0},
+                            "AD_REQUESTS": {"integerValue": 0},
+                        }
+                    }
+                ]
 
             result["estimated_earnings"] = FloatCurrentAndPrevious(
                 current=int(
@@ -175,12 +196,16 @@ class ReportCardV1(BaseCard):
             )
             result["ecpm"] = FloatCurrentAndPrevious(
                 current=result["estimated_earnings"].current
-                / result["impressions"].current
+                / (result["impressions"].current if result["impressions"].current else float('nan'))
                 * 1000.0,
                 previous=result["estimated_earnings"].previous
-                / result["impressions"].previous
+                / (result["impressions"].previous if result["impressions"].previous else float('nan'))
                 * 1000.0,
             )
+            if math.isnan(result["ecpm"].current):
+                result["ecpm"].current = 0.0
+            if math.isnan(result["ecpm"].previous):
+                result["ecpm"].previous = 0.0
         return ReportCardV1(**result)
 
 

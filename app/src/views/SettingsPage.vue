@@ -12,44 +12,78 @@
         </ion-toolbar>
       </ion-header>
 
-      <div id="container">
-        <ion-button v-if="!authToken" @click="login" size="small" fill="outline">
+      <ion-card v-if="Object.keys(profile).length">
+        <ion-card-content>
+          <ion-item lines="none">
+            <ion-avatar slot="start">
+              <img :src="profile.picture_url" />
+            </ion-avatar>
+            <ion-label>
+              {{ profile.first_name }} {{ profile.last_name }}
+              <br />
+              {{ profile.email }}
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+
+      <div style="text-align:center;" class="ion-padding">
+        <ion-button v-if="!authToken" @click="login" expand="full">
           <ion-icon slot="start" :icon="logInOutline"></ion-icon>
           Login
         </ion-button>
-        <ion-button v-if="authToken" @click="logout" size="small" fill="outline">
+        <ion-button v-if="authToken" @click="login" expand="full">
+          <ion-icon slot="start" :icon="logInOutline"></ion-icon>
+          Reauthenticate
+        </ion-button>
+        <ion-button v-if="authToken" @click="logout" expand="full" color="danger">
           <ion-icon slot="start" :icon="logOutOutline"></ion-icon>
           Logout
         </ion-button>
+
+        <ion-button href="https://admobwatchtower.com/privacy" target="_blank" expand="full" fill="clear">Privacy
+          Policy</ion-button>
       </div>
     </ion-content>
   </ion-page>
 </template>
 
-<style scoped>
-#container {
-  text-align: center;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-}
-</style>
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonCard, IonCardContent, IonItem, IonAvatar, IonLabel } from '@ionic/vue';
 import { authToken, store } from '@/state';
 import { logInOutline, logOutOutline } from 'ionicons/icons';
+import { fetchProfile } from '@/api'
+import { watch, ref } from 'vue'
+import { Capacitor } from '@capacitor/core';
 
+const loadData = () => {
+  if (!authToken.value) {
+    profile.value = {}
+    return
+  }
+  fetchProfile().then((res) => {
+    profile.value = res
+  })
+}
 
+const profile = ref({})
+watch(authToken, loadData)
+loadData()
+
+console.log()
 const login = () => {
-  authToken.value = 'aa8d6daa-a842-4acf-b948-957c6b4bb447'
-  store.set('authToken', 'aa8d6daa-a842-4acf-b948-957c6b4bb447')
+  if (Capacitor.getPlatform() == 'web') {
+    // Live-reload + debug mode with test account.
+    store.set('authToken', "aa8d6daa-a842-4acf-b948-957c6b4bb447")
+    window.location.reload()
+  } else {
+    window.open("https://admobwatchtower.com/connect")
+  }
 }
 
 const logout = () => {
-  authToken.value = null
+  authToken.value = ''
   store.clear()
 }
 </script>

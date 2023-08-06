@@ -48,7 +48,17 @@
                 <ion-chip :outline="true" v-for="tag in selectedCard.tags">{{ tag }}</ion-chip>
               </div>
             </div>
-            <component style="margin:0px;" :is="selectedCard.component" :options="selectedCard.options"></component>
+            <template v-if="selectedCard.tags.indexOf('Public') < 0 && !authToken">
+              <ion-card style="margin:0px;" color="danger">
+                <ion-card-content>
+                  This card contains data that requires access to your AdMob account. You can connect 
+                  your account in the Settings tab.
+                </ion-card-content>
+              </ion-card>
+            </template>
+            <template v-if="!(selectedCard.tags.indexOf('Public') < 0 && !authToken)">
+              <component style="margin:0px;" :is="selectedCard.component" :options="selectedCard.options"></component>
+            </template>
           </template>
         </ion-content>
       </ion-modal>
@@ -72,6 +82,7 @@ import { ref, shallowRef, computed } from 'vue';
 import { IonPage, IonHeader, IonToolbar, IonButton, IonButtons, IonModal, IonChip, IonTitle, IonContent, IonSearchbar, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent } from '@ionic/vue';
 import { cardDefinitions } from '@/cards';
 import { overviewCards } from '@/state'
+import { authToken } from '@/state';
 
 const query = ref("")
 const filteredCardDefinitions = computed(() => {

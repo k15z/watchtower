@@ -7,6 +7,10 @@ const routes = [
     component: () => import('@/layouts/Home.vue'),
   },
   {
+    path: '/connect',
+    component: () => import('@/layouts/Connect.vue'),
+  },
+  {
     path: '/privacy',
     name: 'Privacy Policy',
     component: () => import('@/layouts/Privacy.vue'),
