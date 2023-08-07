@@ -1,7 +1,7 @@
 <template>
     <ion-card>
         <ion-card-header>
-            <ion-card-subtitle>Platform eCPM</ion-card-subtitle>
+            <ion-card-subtitle>eCPM By Platform and Format</ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content>

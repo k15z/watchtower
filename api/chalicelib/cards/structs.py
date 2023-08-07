@@ -414,4 +414,53 @@ class EarningsByDayOfWeekV1(BaseCard):
 
 # ---
 
+
+class ECPMByGenreV1Row(BaseModel):
+    app_genre: str
+    ecpm: float
+
+
+class ECPMByGenreV1Options(BaseModel):
+    ad_format: str
+
+
+class ECPMByGenreV1(BaseCard):
+    rows: List[ECPMByGenreV1Row]
+
+    @classmethod
+    @validate_arguments
+    def build(self, options: ECPMByGenreV1Options):
+        rows = []
+        with connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT
+                        genre,
+                        (SUM(earnings) / SUM(impressions)) / 1000.0 as ecpm
+                    FROM (
+                        SELECT cast(date_trunc('week', date) as date) as week, * FROM record
+                        LEFT JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
+                        LEFT JOIN app ON ad_unit.admob_app_id = app.admob_app_id
+                        LEFT JOIN app_external ON app.id = app_external.app_id
+                        LEFT JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
+                        LEFT JOIN account ON publisher.account_id = account.id
+                        WHERE impressions > 0 AND format = %s
+                    ) dataset
+                    GROUP BY genre
+                    ORDER BY genre
+                    """, (options.ad_format,)
+                )
+                for row in cursor.fetchall():
+                    rows.append(
+                        ECPMByGenreV1Row(
+                            app_genre=row["genre"].strip(),
+                            ecpm=float(row["ecpm"]),
+                        )
+                    )
+        return ECPMByGenreV1(rows=rows)
+
+
+# ---
+
 card_name_to_class = {card.__name__: card for card in BaseCard.__subclasses__()}

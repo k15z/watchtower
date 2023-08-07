@@ -16,6 +16,7 @@ store.create().then(async () => {
     } else {
         overviewCards.push(...[
             { "key": 'PlatformECPMCard', "options": {} },
+            { "key": 'ECPMByGenre', "options": {} },
         ])
     }
 

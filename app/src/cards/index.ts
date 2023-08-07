@@ -5,6 +5,7 @@ import PlatformECPMCard from "./PlatformECPMCard.vue";
 import ECPMMapCard from "./ECPMMapCard.vue"
 import EarningsByApp from "./EarningsByApp.vue"
 import EarningsByDayOfWeek from "./EarningsByDayOfWeek.vue"
+import ECPMByGenre from "./ECPMByGenre.vue"
 
 
 export enum Tag {
@@ -56,6 +57,13 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': EarningsByDayOfWeek,
         'tags': [Tag.Graphical]
     },
+    {
+        'key': 'ECPMByGenre',
+        'name': 'ECPM By Genre',
+        'description': 'This displays a bar plot showing the eCPM for each genre to let you explore which genres are most valuable.',
+        'component': ECPMByGenre,
+        'tags': [Tag.Public, Tag.Graphical],
+    }
     /*
     {
         'key': 'ECPMSummaryCard',
