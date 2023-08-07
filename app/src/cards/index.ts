@@ -1,11 +1,14 @@
-import TimeSeriesPlot from "./TimeSeriesPlot.vue";
 import ReportCard from "./ReportCard.vue";
+import ReportByApp from "./ReportByApp.vue"
+import ReportByAppVersion from "./ReportByAppVersion.vue"
+
 import ECPMSummaryCard from "./ECPMSummaryCard.vue";
-import PlatformECPMCard from "./PlatformECPMCard.vue";
+import ECPMByPlatform from "./ECPMByPlatform.vue";
 import ECPMMapCard from "./ECPMMapCard.vue"
-import EarningsByApp from "./EarningsByApp.vue"
-import EarningsByDayOfWeek from "./EarningsByDayOfWeek.vue"
 import ECPMByGenre from "./ECPMByGenre.vue"
+
+import TimeSeriesPlot from "./TimeSeriesPlot.vue";
+import EarningsByDayOfWeek from "./EarningsByDayOfWeek.vue"
 
 
 export enum Tag {
@@ -37,18 +40,25 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'tags': [Tag.Interactive, Tag.Numerical]
     },
     {
+        'key': 'ReportByApp',
+        'name': 'Report By App',
+        'description': 'This displays your earnings and impressions broken down by apps for the most recent 1, 7, or 28 days.',
+        'component': ReportByApp,
+        'tags': [Tag.Interactive, Tag.Numerical],
+    },
+    {
+        'key': 'ReportByAppVersion',
+        'name': 'Report By App Version',
+        'description': 'This displays your earnings and impressions for a specific app broken down by app version for the most recent 1, 7, or 28 days.',
+        'component': ReportByAppVersion,
+        'tags': [Tag.Interactive, Tag.Numerical],
+    },
+    {
         'key': 'TimeSeriesPlot',
         'name': '7-Day Time Series',
         'description': 'This displays a bar chart containing the earnings, impressions, and requests for the past 7 days.',
         'component': TimeSeriesPlot,
         'tags': [Tag.Interactive, Tag.Graphical]
-    },
-    {
-        'key': 'PlatformECPMCard',
-        'name': 'Platform ECPM Card',
-        'description': 'This displays a breakdown of the current network eCPM across different platforms and for different ad formats.',
-        'component': PlatformECPMCard,
-        'tags': [Tag.Public, Tag.Numerical],
     },
     {
         'key': 'EarningsByDayOfWeek',
@@ -58,13 +68,19 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'tags': [Tag.Graphical]
     },
     {
+        'key': 'ECPMByPlatform',
+        'name': 'ECPM By Platform',
+        'description': 'This displays a breakdown of the current network eCPM across different platforms and for different ad formats.',
+        'component': ECPMByPlatform,
+        'tags': [Tag.Public, Tag.Numerical],
+    },
+    {
         'key': 'ECPMByGenre',
         'name': 'ECPM By Genre',
         'description': 'This displays a bar plot showing the eCPM for each genre to let you explore which genres are most valuable.',
         'component': ECPMByGenre,
         'tags': [Tag.Public, Tag.Graphical],
-    }
-    /*
+    },
     {
         'key': 'ECPMSummaryCard',
         'name': 'ECPM Summary Card',
@@ -79,23 +95,6 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': ECPMMapCard,
         'tags': [Tag.Public, Tag.Graphical],
     },
-    {
-        'key': '1DayEarningsByApp',
-        'name': 'Today\'s Earnings By App',
-        'description': 'This displays your earnings so far for today broken down by app.',
-        'component': EarningsByApp,
-        'tags': [Tag.Numerical],
-        'options': {'interval': 'today'}
-    },
-    {
-        'key': '7DayEarningsByApp',
-        'name': '7-Day Earnings By App',
-        'description': 'This displays your total earnings over the past week broken down by app.',
-        'component': EarningsByApp,
-        'tags': [Tag.Numerical],
-        'options': {'interval': 'week'}
-    },
-    */
 ]
 
 const cardDefinitions: Record<string, any> = {}
@@ -103,4 +102,4 @@ cardDefinitionsRaw.forEach((cardDefinition: any) => {
     cardDefinitions[cardDefinition.key] = cardDefinition;
 })
 
-export { cardDefinitions, EarningsCard, ReportCard };
+export { cardDefinitions };

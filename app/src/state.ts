@@ -11,11 +11,11 @@ store.create().then(async () => {
     if (authToken.value) {
         overviewCards.push(...[
             { "key": 'ReportCard', "options": {} },
-            { "key": 'PlatformECPMCard', "options": {} },
+            { "key": 'ECPMByPlatform', "options": {} },
         ])
     } else {
         overviewCards.push(...[
-            { "key": 'PlatformECPMCard', "options": {} },
+            { "key": 'ECPMByPlatform', "options": {} },
             { "key": 'ECPMByGenre', "options": {} },
         ])
     }
