@@ -1,5 +1,5 @@
 <div align=center>
-    <img src="./www/src/assets/logo.png" width=360>
+    <img src="./app/assets/logo.png" width=360>
 </div>
 
 # AdMob Watchtower
