@@ -23,7 +23,7 @@
             {{ card.description }}
           </p>
           <div>
-            <ion-chip :outline="true" v-for="tag in card.tags">{{ tag }}</ion-chip>
+            <tag-chip :tag="tag" v-for="tag in card.tags"></tag-chip>
           </div>
         </ion-card-content>
       </ion-card>
@@ -45,13 +45,13 @@
               <h1 style="text-align: center;">{{ selectedCard.name }}</h1>
               <p style="text-align: left;">{{ selectedCard.description }}</p>
               <div style="padding-bottom:1em;">
-                <ion-chip :outline="true" v-for="tag in selectedCard.tags">{{ tag }}</ion-chip>
+                <tag-chip :tag="tag" v-for="tag in selectedCard.tags"></tag-chip>
               </div>
             </div>
             <template v-if="selectedCard.tags.indexOf('Public') < 0 && !authToken">
               <ion-card style="margin:0px;" color="danger">
                 <ion-card-content>
-                  This card contains data that requires access to your AdMob account. You can connect 
+                  This card contains data that requires access to your AdMob account. You can connect
                   your account in the Settings tab.
                 </ion-card-content>
               </ion-card>
@@ -79,10 +79,11 @@ ion-chip {
 
 <script setup lang="ts">
 import { ref, shallowRef, computed } from 'vue';
-import { IonPage, IonHeader, IonToolbar, IonButton, IonButtons, IonModal, IonChip, IonTitle, IonContent, IonSearchbar, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent } from '@ionic/vue';
-import { cardDefinitions } from '@/cards';
+import { IonPage, IonHeader, IonToolbar, IonButton, IonButtons, IonModal, IonChip, IonTitle, IonContent, IonSearchbar, IonCard, IonCardHeader, IonCardSubtitle, IonCardContent, alertController } from '@ionic/vue';
+import { Tag, cardDefinitions } from '@/cards';
 import { overviewCards } from '@/state'
 import { authToken } from '@/state';
+import TagChip from '@/components/TagChip.vue';
 
 const query = ref("")
 const filteredCardDefinitions = computed(() => {
@@ -117,5 +118,30 @@ const addCard = (card: any) => {
     options: card.options || {}
   })
   showModal.value = false
+}
+
+const tagToColor: Record<Tag, string> = {
+  "Public": "success",
+  "Numerical": "primary",
+  "Interactive": "secondary",
+  "Graphical": "warning",
+  "Textual": "tertiary",
+}
+
+const tagToMessage: Record<Tag, string> = {
+  "Public": "Public cards does not require access to your AdMob account and only display anonymized data.",
+  "Numerical": "Numerical cards typically contain tables or grids showing various breakdowns of your data.",
+  "Interactive": "Interactive cards typically contain elements such as selection menus to choose what is displayed.",
+  "Graphical": "Graphical cards typically contain charts and are often used to display time series.",
+  "Textual": "Textual cards are focused on displaying text-based content suck as summaries and instructions.",
+}
+
+const explainTag = async (tag: Tag) => {
+  const alert = await alertController.create({
+    header: tag + " Cards",
+    message: tagToMessage[tag],
+    buttons: ['OK'],
+  });
+  await alert.present();
 }
 </script>

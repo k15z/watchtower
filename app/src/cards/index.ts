@@ -7,7 +7,7 @@ import EarningsByApp from "./EarningsByApp.vue"
 import EarningsByDayOfWeek from "./EarningsByDayOfWeek.vue"
 
 
-enum Tag {
+export enum Tag {
     Public = "Public",
     Interactive = "Interactive",
     Textual = "Textual",
