@@ -15,6 +15,10 @@
 ion-card-header {
     padding-bottom: 0px;
 }
+
+ion-card-content {
+    padding: 12px;
+}
 </style>
 
 <script setup lang="ts">
@@ -31,6 +35,9 @@ const options = ref({
     },
     dataLabels: {
         enabled: false
+    },
+    theme: {
+        mode: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
     },
     plotOptions: {
         bar: {

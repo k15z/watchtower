@@ -26,6 +26,10 @@ ion-card-header {
 ion-card-content {
     padding: 12px;
 }
+
+.vue-apexcharts {
+    margin-top: 12px;
+}
 </style>
 
 <script setup lang="ts">
@@ -46,6 +50,9 @@ const options = ref({
     },
     dataLabels: {
         enabled: false
+    },
+    theme: {
+        mode: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
     },
     grid: {
         padding: {
