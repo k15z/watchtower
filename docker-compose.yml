@@ -1,0 +1,20 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - /Users/kevz/.aws/:/root/.aws/
+      - ./api:/app
+  app:
+    build: ./app
+    ports:
+      - "8100:8100"
+    volumes:
+      - ./app/src:/app/src
+  www:
+    build: ./www
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./www/src:/app/src

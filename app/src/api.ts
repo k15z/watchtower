@@ -1,7 +1,11 @@
 import { authToken } from '@/state'
+import { Capacitor } from '@capacitor/core';
 
-// const BASE_API_URL = "http://localhost:8000"
-const BASE_API_URL = "https://5l40l9u6y0.execute-api.us-east-1.amazonaws.com/api"
+// const BASE_API_URL = ""
+let BASE_API_URL = "https://5l40l9u6y0.execute-api.us-east-1.amazonaws.com/api"
+if (Capacitor.getPlatform() == 'web') {
+    BASE_API_URL = "http://localhost:8000"
+}
 
 export const fetchProfile = async () => {
     let response = await fetch(BASE_API_URL + "/account", {
