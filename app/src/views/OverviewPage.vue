@@ -44,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { overviewCards } from '@/state'
+import { ref, watch } from 'vue'
+import { authToken, overviewCards } from '@/state'
 import { cardDefinitions } from '@/cards';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonReorder, IonButton, IonFab, IonIcon, IonFabButton, IonReorderGroup, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { closeOutline, reorderThreeOutline, trashOutline, pencilOutline } from 'ionicons/icons';
@@ -69,6 +69,10 @@ const handleRefresh = (event: any) => {
   componentKey.value += 1
   event.target.complete();
 }
+
+watch(authToken, () => {
+  componentKey.value += 1
+})
 </script>
 
 <style scoped>

@@ -2,29 +2,59 @@
     <v-container class="h-screen">
         <v-responsive class="align-center text-center fill-height">
             <div>
-                <h1 class="text-h5 font-weight-bold">AdMob Watchtower</h1>
+                <a href="/"><img style="width:6em;" src="/public/favicon.png" alt="Watchtower Logo" /></a>
+                <h1 class="text-h5 font-weight-bold">Watchtower</h1>
                 <br />
-                <div class="text-body-1 font-weight-light mb-n1">
-                    <span>Sign in with your Google Account to continue.</span>
-                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
                 <br />
             </div>
-            <v-btn @click="launchAuthorizationFlow" color="red" min-width="228" rel="noopener noreferrer" size="large"
-                variant="flat">
-                <v-icon icon="mdi-google" size="large" start />
-
-                Sign In With Google
-            </v-btn>
+            <template v-if="loading">
+                <v-progress-circular indeterminate size="64" color="red" />
+            </template>
+            <template v-if="!loading && !success">
+                <v-btn @click="launchAuthorizationFlow" color="red" min-width="228" rel="noopener noreferrer" size="default"
+                    variant="flat">
+                    <v-icon icon="mdi-google" size="large" start />
+                    Sign In With Google
+                </v-btn>
+            </template>
+            <template v-if="!loading && success">
+                <v-btn @click="openApp" color="red" min-width="228" rel="noopener noreferrer" size="default" variant="flat">
+                    <v-icon icon="mdi-exit-to-app" size="large" start />
+                    Launch The App
+                </v-btn>
+            </template>
         </v-responsive>
+        <v-dialog v-model="showError" width="auto">
+            <v-card>
+                <v-card-text>
+                    There was an error connecting to your AdMob account. Please make sure that the Google Account you
+                    signed in with is associated with an AdMob account in good standing.
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="primary" block @click="showError = false">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { event } from 'vue-gtag'
 import { BASE_API_URL, helloWorld } from '../api'
 
+const loading = ref(false)
+const success = ref(false)
+const showError = ref(false)
+
 function validateAuthorizationCode(code: string) {
     event("validation_start", {})
+    loading.value = true
     fetch(BASE_API_URL + "/authorize", {
         method: 'POST',
         mode: 'cors',
@@ -35,17 +65,24 @@ function validateAuthorizationCode(code: string) {
             'auth_code': code
         })
     }).then((resp) => {
+        loading.value = false
         if (resp.ok) {
             resp.json().then((res) => {
                 event("validation_success", {})
                 localStorage.setItem("token", res.token)
                 window.open("watchtower://connect?token=" + res.token, "_self")
             })
+            success.value = true
         } else {
             event("validation_fail", {})
-            alert("Please try again using the Google Account linked to your AdMob profile.")
+            showError.value = true
         }
     })
+}
+
+function openApp() {
+    const token = localStorage.getItem("token")
+    window.open("watchtower://connect?token=" + token, "_self")
 }
 
 function launchAuthorizationFlow() {

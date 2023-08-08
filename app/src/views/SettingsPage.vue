@@ -56,6 +56,7 @@ import { logInOutline, logOutOutline } from 'ionicons/icons';
 import { fetchProfile } from '@/api'
 import { watch, ref } from 'vue'
 import { Capacitor } from '@capacitor/core';
+import router from '@/router';
 
 const loadData = () => {
   if (!authToken.value) {
@@ -71,12 +72,12 @@ const profile = ref({})
 watch(authToken, loadData)
 loadData()
 
-console.log()
 const login = () => {
   if (Capacitor.getPlatform() == 'web') {
     // Live-reload + debug mode with test account.
-    store.set('authToken', "aa8d6daa-a842-4acf-b948-957c6b4bb447")
-    window.location.reload()
+    store.set('authToken', "8449ee12-ecf8-445f-b721-cb2022b28ff0")
+    authToken.value = "8449ee12-ecf8-445f-b721-cb2022b28ff0"
+    router.push('/')
   } else {
     window.open("https://admobwatchtower.com/connect")
   }
