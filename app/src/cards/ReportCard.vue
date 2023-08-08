@@ -56,10 +56,7 @@ ion-grid {
 
 .primary {
     font-size: 2em;
-}
-
-.secondary {
-    font-size: 0.8em;
+    color: var(--ion-color-step-800)
 }
 
 ion-card-content {

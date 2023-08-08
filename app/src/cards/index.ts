@@ -46,13 +46,13 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': ReportByApp,
         'tags': [Tag.Interactive, Tag.Numerical],
     },
-    {
+    /*{
         'key': 'ReportByAppVersion',
         'name': 'Report By App Version',
         'description': 'This displays your earnings and impressions for a specific app broken down by app version for the most recent 1, 7, or 28 days.',
         'component': ReportByAppVersion,
         'tags': [Tag.Interactive, Tag.Numerical],
-    },
+    },*/
     {
         'key': 'TimeSeriesPlot',
         'name': '7-Day Time Series',
@@ -81,7 +81,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': ECPMByGenre,
         'tags': [Tag.Public, Tag.Graphical],
     },
-    {
+    /*{
         'key': 'ECPMSummaryCard',
         'name': 'ECPM Summary Card',
         'description': 'This displays a text-based summary of the eCPM of the entire network over the past week compared to the previous week.',
@@ -94,7 +94,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'description': 'This displays a map showing the current eCPM in different countries around the world.',
         'component': ECPMMapCard,
         'tags': [Tag.Public, Tag.Graphical],
-    },
+    },*/
 ]
 
 const cardDefinitions: Record<string, any> = {}

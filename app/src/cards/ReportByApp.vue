@@ -1,45 +1,110 @@
 <template>
     <ion-card>
-        <ion-card-header>
-            <ion-card-subtitle>Earnings By App ({{ props.options.interval }})</ion-card-subtitle>
-        </ion-card-header>
-
         <ion-card-content>
-            <table>
-                <tr>
-                    <td></td>
-                    <td>Earnings</td>
-                    <td>Impressions</td>
-                </tr>
-                <tr>
-                    <td>AO3 Disco</td>
-                    <td>$1.0</td>
-                    <td>1000</td>
-                </tr>
-            </table>
+            <ion-segment :scrollable="true" v-model="interval">
+                <ion-segment-button value="day">
+                    <ion-label>Today</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="week">
+                    <ion-label>7 Days</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="month">
+                    <ion-label>28 Days</ion-label>
+                </ion-segment-button>
+            </ion-segment>
+            <div v-if="loading">
+                <skeleton-loader></skeleton-loader>
+            </div>
+            <div v-if="loading">
+                <skeleton-loader></skeleton-loader>
+            </div>
+            <div v-if="!loading">
+                <table>
+                    <template v-for="row in rows">
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <h1>
+                                    <ion-icon :icon="row.app_platform == 'Android' ? logoAndroid : logoApple"
+                                        style="margin-top:-6px; float:right;" size="large"></ion-icon>
+                                        <b>{{ row.app_name }}</b>
+                                </h1>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="label">Earnings</span>
+                                <br />
+                                <span class="primary">${{ formatMoney(row.estimated_earnings) }}</span>
+                            </td>
+                            <td>
+                                <span class="label">Impressions</span>
+                                <br />
+                                <span class="primary">{{ row.impressions }}</span>
+                            </td>
+                        </tr>
+                    </template>
+                </table>
+            </div>
         </ion-card-content>
     </ion-card>
 </template>
 
 <style scoped>
-ion-card-header {
-    padding-bottom: 0px;
+ion-grid {
+    --ion-grid-padding: 0px;
+}
+
+.label {
+    font-weight: bold;
+}
+
+h2 {
+    color: var(--ion-color-medium);
+    font-weight: bold;
+}
+
+.primary {
+    font-size: 2em;
+    color: var(--ion-color-step-800)
+}
+
+ion-card-content {
+    padding: 12px;
 }
 
 table {
     width: 100%;
 }
-
-td {
-    padding: 12px;
-}
-
-tr td:nth-child(2), tr td:nth-child(3) {
-    text-align:center;
-}
 </style>
 
 <script setup lang="ts">
-import { IonCard, IonCardHeader, IonCardSubtitle, IonCardContent } from '@ionic/vue';
-const props = defineProps(['options'])
+import { ref, watch } from 'vue'
+import { IonCard, IonSegment, IonSegmentButton, IonLabel, IonCardContent, IonGrid, IonRow, IonCol, IonText } from '@ionic/vue';
+import { fetchCard } from '@/api';
+import SkeletonLoader from '@/components/SkeletonLoader.vue';
+import { logoApple, logoAndroid } from 'ionicons/icons';
+
+const interval = ref('day');
+const loading = ref(true);
+const rows = ref([]) as any;
+
+const fetchData = () => {
+    rows.value = []
+    loading.value = true
+    fetchCard('ReportByAppV1', { "date_filter": { "interval": interval.value } }).then((res: any) => {
+        rows.value = res.rows
+        loading.value = false
+    });
+}
+
+const formatMoney = (amount: number) => {
+    return amount.toFixed(2)
+}
+
+watch(interval, fetchData)
+fetchData()
 </script>

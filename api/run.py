@@ -15,6 +15,6 @@ from chalicelib.cards import handle_card
 
 print(
     handle_card(
-        name="ECPMByGenreV1", options={"ad_format": "BANNER"}, user_id=8
+        name="ReportByAppV1", options={"date_filter": {"interval": "week"}}, user_id=8
     ).dict()
 )

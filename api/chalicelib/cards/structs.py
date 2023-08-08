@@ -224,22 +224,22 @@ class ReportCardV1(BaseCard):
 # ---
 
 
-class PlatformECPMV1Options(BaseModel):
+class ECPMByPlatformOptions(BaseModel):
     date_filter: DateFilter
 
 
-class PlatformECPMV1Row(BaseModel):
+class ECPMByPlatformRow(BaseModel):
     ad_format: str
     ios_ecpm: Optional[float]
     android_ecpm: Optional[float]
 
 
-class PlatformECPMV1(BaseCard):
-    rows: List[PlatformECPMV1Row]
+class ECPMByPlatform(BaseCard):
+    rows: List[ECPMByPlatformRow]
 
     @classmethod
     @validate_arguments
-    def build(self, options: PlatformECPMV1Options):
+    def build(self, options: ECPMByPlatformOptions):
         format_to_row = {}
         with connection() as conn:
             with conn.cursor() as cursor:
@@ -261,7 +261,7 @@ class PlatformECPMV1(BaseCard):
                 )
                 for row in cursor.fetchall():
                     if row["format"] not in format_to_row:
-                        format_to_row[row["format"]] = PlatformECPMV1Row(
+                        format_to_row[row["format"]] = ECPMByPlatformRow(
                             ad_format=row["format"],
                             ios_ecpm=None,
                             android_ecpm=None,
@@ -270,7 +270,7 @@ class PlatformECPMV1(BaseCard):
                         format_to_row[row["format"]].ios_ecpm = float(row["ecpm"])
                     elif row["platform"] == "ANDROID":
                         format_to_row[row["format"]].android_ecpm = float(row["ecpm"])
-        return PlatformECPMV1(rows=list(format_to_row.values()))
+        return ECPMByPlatform(rows=list(format_to_row.values()))
 
 
 # ---
@@ -332,6 +332,61 @@ class TimeSeriesPlotV1(BaseCard):
                 )
         return TimeSeriesPlotV1(**result)
 
+# ---
+
+class ReportByAppV1Options(BaseModel):
+    user_id: int
+    date_filter: DateFilter
+
+
+class ReportByAppV1Row(BaseModel):
+    app_name: str
+    app_platform: str
+    estimated_earnings: float
+    impressions: int
+    ad_requests: int
+
+
+class ReportByAppV1(BaseCard):
+    currency_code: str
+    rows: List[ReportByAppV1Row]
+
+    @classmethod
+    @validate_arguments
+    def build(self, options: ReportByAppV1Options):
+        with connection() as conn:
+            service = build_admob_service(conn, options.user_id)
+
+        result = {"rows": []}
+        response = service.accounts().list(pageSize=10).execute()
+        for account in response["account"]:
+            result["time_zone"] = account["reportingTimeZone"]
+
+            start, end = _date_filter_to_start_end(
+                options.date_filter, account["reportingTimeZone"]
+            )
+
+            result["currency_code"], rows = _get_basics(
+                service, start, end, account["publisherId"], dimensions=["APP", "PLATFORM"]
+            )
+            for row in rows:
+                result["rows"].append(
+                    {
+                        "app_name": row["dimensionValues"]["APP"]["displayLabel"],
+                        "app_platform": row["dimensionValues"]["PLATFORM"]["value"],
+                        "estimated_earnings": int(
+                            row["metricValues"]["ESTIMATED_EARNINGS"]["microsValue"]
+                        )
+                        / (1000.0 * 1000.0),
+                        "impressions": int(
+                            row["metricValues"]["IMPRESSIONS"]["integerValue"]
+                        ),
+                        "ad_requests": int(
+                            row["metricValues"]["AD_REQUESTS"]["integerValue"]
+                        ),
+                    }
+                )
+        return ReportByAppV1(**result)
 
 # ---
 

@@ -64,7 +64,7 @@ const formatECPM = (value: number) => {
     return "$" + value.toFixed(2);
 };
 
-fetchCard('PlatformECPMV1', { "date_filter": { "interval": "day" } }).then((data: any) => {
+fetchCard('ECPMByPlatform', { "date_filter": { "interval": "day" } }).then((data: any) => {
     rows.value.push(...data.rows)
     loading.value = false
 });
