@@ -17,7 +17,7 @@ ion-card-header {
 }
 
 ion-card-content {
-    padding: 12px;
+    padding-top: 12px;
 }
 </style>
 
