@@ -12,8 +12,11 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-card v-if="Object.keys(profile).length">
-        <ion-card-content>
+      <ion-card v-if="loading || Object.keys(profile).length">
+        <div v-if="loading" style="padding:20px;">
+          <skeleton-loader :rows="2"></skeleton-loader>
+        </div>
+        <ion-card-content v-if="Object.keys(profile).length">
           <ion-item lines="none">
             <ion-avatar slot="start">
               <img :src="profile.picture_url" />
@@ -44,7 +47,7 @@
         <ion-button href="https://admobwatchtower.com/privacy" target="_blank" expand="full" fill="clear">Privacy
           Policy</ion-button>
 
-        <img @click="easterEgg" style="width:2em;" src="/public/favicon.png" alt="Watchtower Logo" />
+        <watchtower-logo style="width:2em" @easter-egg="easterEgg"></watchtower-logo>
       </div>
     </ion-content>
   </ion-page>
@@ -58,16 +61,20 @@ import { cardDefinitions } from '@/cards';
 import { logInOutline, logOutOutline } from 'ionicons/icons';
 import { fetchProfile } from '@/api'
 import { watch, ref } from 'vue'
-import { Capacitor } from '@capacitor/core';
 import router from '@/router';
+import WatchtowerLogo from '@/components/WatchtowerLogo.vue';
+import SkeletonLoader from '@/components/SkeletonLoader.vue';
 
+const loading = ref(false)
 const loadData = () => {
   if (!authToken.value) {
     profile.value = {}
     return
   }
+  loading.value = true
   fetchProfile().then((res) => {
     profile.value = res
+    loading.value = false
   })
 }
 
@@ -76,14 +83,7 @@ watch(authToken, loadData)
 loadData()
 
 const login = () => {
-  if (Capacitor.getPlatform() == 'web') {
-    // Live-reload + debug mode with test account.
-    store.set('authToken', "8449ee12-ecf8-445f-b721-cb2022b28ff0")
-    authToken.value = "8449ee12-ecf8-445f-b721-cb2022b28ff0"
-    router.push('/')
-  } else {
-    window.open("https://admobwatchtower.com/connect")
-  }
+  window.open("https://admobwatchtower.com/connect")
 }
 
 const logout = () => {
@@ -91,18 +91,23 @@ const logout = () => {
   store.clear()
 }
 
-let counter = 0;
-const easterEgg = () => {
-  counter += 1;
-  if (counter == 5) {
-    alert("You found the easter egg! 🥚🐣🐥")
-    const kitchenSink: any = [];
-    Object.values(cardDefinitions).forEach((card: any) => {
-      kitchenSink.push({ "key": card.key, "options": card.options ? card.options : {} })
-    })
-    overviewCards.length = 0
-    overviewCards.push(...kitchenSink)
-    router.push("/")
+function shuffle(a: any[]) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
+  return a;
+}
+
+const easterEgg = () => {
+  alert("Easter egg activated! 🥚🐣🐥")
+  const kitchenSink: any = [];
+  Object.values(cardDefinitions).forEach((card: any) => {
+    kitchenSink.push({ "key": card.key, "options": card.options ? card.options : {} })
+  })
+  overviewCards.length = 0
+  overviewCards.push(...kitchenSink)
+  shuffle(overviewCards)
+  router.push("/")
 }
 </script>

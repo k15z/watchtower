@@ -24,25 +24,37 @@
                         <tr>
                             <td>&nbsp;</td>
                             <td>&nbsp;</td>
+                            <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="2">
+                            <td colspan="3">
                                 <h1>
-                                    <ion-icon :icon="row.app_platform == 'Android' ? logoAndroid : logoApple"
-                                        style="margin-top:-6px; float:right;" size="large"></ion-icon>
-                                        <b>{{ row.app_name }}</b>
+                                    {{ row.app_name }}
                                 </h1>
                             </td>
                         </tr>
                         <tr>
                             <td>
+                                <span class="label">Platform</span>
+                            </td>
+                            <td>
                                 <span class="label">Earnings</span>
-                                <br />
-                                <span class="primary">${{ formatMoney(row.estimated_earnings) }}</span>
                             </td>
                             <td>
                                 <span class="label">Impressions</span>
-                                <br />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="primary">
+                                    <ion-icon :icon="row.app_platform == 'Android' ? logoAndroid : logoApple"></ion-icon>
+
+                                </span>
+                            </td>
+                            <td>
+                                <span class="primary">${{ formatMoney(row.estimated_earnings) }}</span>
+                            </td>
+                            <td>
                                 <span class="primary">{{ row.impressions }}</span>
                             </td>
                         </tr>

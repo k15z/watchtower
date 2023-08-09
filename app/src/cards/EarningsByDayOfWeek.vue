@@ -18,6 +18,7 @@ ion-card-header {
 
 ion-card-content {
     padding-top: 12px;
+    padding-left: 0;
 }
 </style>
 
@@ -32,6 +33,15 @@ const options = ref({
             show: false,
         },
         parentHeightOffset: 0,
+        background: '#fff0',
+    },
+    tooltip: {
+        fixed: {
+            enabled: true,
+            position: 'bottomRight',
+            offsetX: 0,
+            offsetY: 0,
+        }
     },
     dataLabels: {
         enabled: false

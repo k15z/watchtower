@@ -71,8 +71,8 @@ const cardDefinitionsRaw: CardDefinition[] = [
     },
     {
         'key': 'RadarChartDayOfWeek',
-        'name': 'Radar Chart: Earnings By App and Weekday',
-        'description': 'This displays a radar chart showing average earnings on each day of the week for each app.',
+        'name': 'Radar Chart: Earnings By Weekday',
+        'description': 'This displays a radar chart showing average earnings on each day of the week.',
         'component': RadarChartDayOfWeek,
         'tags': [Tag.Graphical]
     },
@@ -110,7 +110,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'description': 'This displays a tree map showing the top performing countries by eCPM.',
         'component': TreeMapPlot,
         'options': {'target': 'ecpm'},
-        'tags': [Tag.Numerical, Tag.Graphical],
+        'tags': [Tag.Public, Tag.Numerical, Tag.Graphical],
     },
     {
         'key': 'TreeMapEarnings',

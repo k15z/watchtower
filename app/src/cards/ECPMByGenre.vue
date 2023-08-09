@@ -32,6 +32,7 @@ const options = ref({
             show: false,
         },
         parentHeightOffset: 0,
+        background: '#fff0',
     },
     dataLabels: {
         enabled: false

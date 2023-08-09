@@ -7,7 +7,7 @@
         </ion-card-header>
 
         <ion-card-content>
-            <apexchart ref="chart" width="100%" height="300px" type="heatmap" :options="chartOptions" :series="series">
+            <apexchart ref="chart" width="100%" height="250px" type="heatmap" :options="chartOptions" :series="series">
             </apexchart>
         </ion-card-content>
     </ion-card>
@@ -19,7 +19,9 @@ ion-card-header {
 }
 
 ion-card-content {
-    padding-top: 12px;
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 </style>
 
@@ -57,6 +59,7 @@ let chartOptions = {
             show: false,
         },
         parentHeightOffset: 0,
+        background: '#fff0',
     },
     theme: {
         mode: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',

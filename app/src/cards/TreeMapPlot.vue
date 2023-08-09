@@ -5,7 +5,7 @@
         </ion-card-header>
 
         <ion-card-content>
-            <apexchart ref="chart" width="100%" height="300px" type="treemap" :options="chartOptions" :series="series">
+            <apexchart ref="chart" width="100%" height="500px" type="treemap" :options="chartOptions" :series="series">
             </apexchart>
         </ion-card-content>
     </ion-card>
@@ -17,12 +17,13 @@ ion-card-header {
 }
 
 ion-card-content {
-    padding-top: 12px;
+    padding-top: 0;
+    margin-right: -12px;
 }
 </style>
 
 <script setup lang="ts">
-import { IonCard, IonCardContent } from '@ionic/vue';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle } from '@ionic/vue';
 
 defineProps(['options'])
 
@@ -39,7 +40,6 @@ const chartOptions = {
             show: false,
         },
         parentHeightOffset: 0,
-        height: 350,
     },
 };
 

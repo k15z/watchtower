@@ -45,6 +45,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 import { authToken, overviewCards } from '@/state'
 import { cardDefinitions } from '@/cards';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonReorder, IonButton, IonFab, IonIcon, IonFabButton, IonReorderGroup, IonRefresher, IonRefresherContent } from '@ionic/vue';
@@ -72,6 +73,11 @@ const handleRefresh = (event: any) => {
 
 watch(authToken, () => {
   componentKey.value += 1
+})
+
+onBeforeRouteLeave((to: any, from: any, next: any) => {
+  editable.value = false
+  next()
 })
 </script>
 
