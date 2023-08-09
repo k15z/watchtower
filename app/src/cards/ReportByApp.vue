@@ -83,7 +83,7 @@ table {
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { IonCard, IonSegment, IonSegmentButton, IonLabel, IonCardContent, IonGrid, IonRow, IonCol, IonText } from '@ionic/vue';
+import { IonCard, IonSegment, IonSegmentButton, IonLabel, IonCardContent, IonIcon } from '@ionic/vue';
 import { fetchCard } from '@/api';
 import SkeletonLoader from '@/components/SkeletonLoader.vue';
 import { logoApple, logoAndroid } from 'ionicons/icons';

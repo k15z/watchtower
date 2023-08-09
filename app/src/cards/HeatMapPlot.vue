@@ -1,7 +1,7 @@
 <template>
     <ion-card>
         <ion-card-content>
-            Report by App Version
+            This should be a heat map.
         </ion-card-content>
     </ion-card>
 </template>

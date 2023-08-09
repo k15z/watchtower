@@ -7,6 +7,7 @@ const store = new Storage();
 const authToken = ref("");
 const overviewCards = reactive([
     { "key": 'ReportCard', "options": {} },
+    { "key": 'EarningsByDayOfWeek', "options": {} },
     { "key": 'ECPMByPlatform', "options": {} },
 ]) as any
 
@@ -15,7 +16,6 @@ store.create().then(async () => {
         // Handle an authentication callback. After the user authenticates on the website, 
         // they are redirected to the app with: watchtower://connect?token=...
         const token = event.url.split('=').pop();
-        console.log("Received authentication token: " + token)
         authToken.value = token as string
         store.set('authToken', token)
         router.push('/')

@@ -50,7 +50,6 @@ onMounted(() => {
                 categories: dataset.map((x: any) => formatDate(x.dimensionValues.DATE.value))
             },
         }
-        console.log(dataset)
         data.series = []
         data.series.push({
             name: "Earnings",

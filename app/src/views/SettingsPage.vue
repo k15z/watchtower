@@ -43,6 +43,8 @@
 
         <ion-button href="https://admobwatchtower.com/privacy" target="_blank" expand="full" fill="clear">Privacy
           Policy</ion-button>
+
+        <img @click="easterEgg" style="width:2em;" src="/public/favicon.png" alt="Watchtower Logo" />
       </div>
     </ion-content>
   </ion-page>
@@ -51,7 +53,8 @@
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonCard, IonCardContent, IonItem, IonAvatar, IonLabel } from '@ionic/vue';
-import { authToken, store } from '@/state';
+import { authToken, store, overviewCards } from '@/state';
+import { cardDefinitions } from '@/cards';
 import { logInOutline, logOutOutline } from 'ionicons/icons';
 import { fetchProfile } from '@/api'
 import { watch, ref } from 'vue'
@@ -86,5 +89,20 @@ const login = () => {
 const logout = () => {
   authToken.value = ''
   store.clear()
+}
+
+let counter = 0;
+const easterEgg = () => {
+  counter += 1;
+  if (counter == 5) {
+    alert("You found the easter egg! 🥚🐣🐥")
+    const kitchenSink: any = [];
+    Object.values(cardDefinitions).forEach((card: any) => {
+      kitchenSink.push({ "key": card.key, "options": card.options ? card.options : {} })
+    })
+    overviewCards.length = 0
+    overviewCards.push(...kitchenSink)
+    router.push("/")
+  }
 }
 </script>

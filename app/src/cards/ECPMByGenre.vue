@@ -66,6 +66,5 @@ fetchCard('ECPMByGenreV1', {"ad_format": "BANNER"}).then((res: any) => {
             y: item.ecpm
         }
     })
-    console.log(series.value[0].data)
 })
 </script>
