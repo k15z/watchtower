@@ -100,7 +100,7 @@ function shuffle(a: any[]) {
 }
 
 const easterEgg = () => {
-  alert("Easter egg activated! 🥚🐣🐥")
+  alert("🥚🐣🐥")
   const kitchenSink: any = [];
   Object.values(cardDefinitions).forEach((card: any) => {
     kitchenSink.push({ "key": card.key, "options": card.options ? card.options : {} })

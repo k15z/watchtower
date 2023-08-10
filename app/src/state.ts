@@ -7,8 +7,8 @@ const store = new Storage();
 const authToken = ref("");
 const overviewCards = reactive([
     { "key": 'ReportCard', "options": {} },
+    { "key": 'HeatMapImpressions', "options": {'target': 'impressions'} },
     { "key": 'EarningsByDayOfWeek', "options": {} },
-    { "key": 'ECPMByPlatform', "options": {} },
 ]) as any
 
 store.create().then(async () => {

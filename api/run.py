@@ -15,6 +15,6 @@ from chalicelib.cards import handle_card
 
 print(
     handle_card(
-        name="ReportByAppV1", options={"date_filter": {"interval": "week"}}, user_id=8
+        name="HeatMapPlotV1", options={"target": "impressions", "user_id": 8}, user_id=8
     ).dict()
 )

@@ -13,7 +13,7 @@
                 </ion-segment-button>
             </ion-segment>
             <div v-if="loading">
-                <skeleton-loader></skeleton-loader>
+                <skeleton-loader :rows="6"></skeleton-loader>
             </div>
             <ion-grid v-if="!loading && data">
                 <ion-row style="padding-top:12px;">

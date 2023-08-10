@@ -27,30 +27,16 @@ ion-card-content {
 
 <script setup lang="ts">
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle } from '@ionic/vue';
+import { fetchCard } from '@/api';
+import {ref} from 'vue'
 
-defineProps(['options'])
+let props = defineProps(['options']);
 
 function formatTarget(target: string) {
     if (target == 'ecpm') {
         return 'eCPM'
     }
     return target.charAt(0).toUpperCase() + target.slice(1)
-}
-
-function generateData(count: number, yrange: any) {
-    let i = 0;
-    let series = [];
-    while (i < count) {
-        let x = 'w' + (i + 1).toString();
-        let y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-
-        series.push({
-            x: x,
-            y: y
-        });
-        i++;
-    }
-    return series;
 }
 
 let chartOptions = {
@@ -69,53 +55,10 @@ let chartOptions = {
     },
     colors: ["#008FFB"]
 };
-let series = [{
-    name: 'Monday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-},
-{
-    name: 'Tuesday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-},
-{
-    name: 'Wednesday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-},
-{
-    name: 'Thursday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-},
-{
-    name: 'Friday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-},
-{
-    name: 'Saturday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-},
-{
-    name: 'Sunday',
-    data: generateData(10, {
-        min: 0,
-        max: 90
-    })
-}]
+let series = ref([]) as any
+
+fetchCard('HeatMapPlotV1', {'target': props.options.target}).then((res: any) => {
+    series.value.length = 0
+    series.value.push(...res.rows)
+})
 </script>

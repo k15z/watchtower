@@ -48,6 +48,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': ReportByApp,
         'tags': [Tag.Interactive, Tag.Numerical],
     },
+    /*
     {
         'key': 'ReportByAppVersion',
         'name': 'Report By App Version',
@@ -55,6 +56,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': ReportByAppVersion,
         'tags': [Tag.Interactive, Tag.Numerical],
     },
+    */
     {
         'key': 'TimeSeriesPlot',
         'name': '7-Day Time Series',
@@ -90,6 +92,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'component': ECPMByGenre,
         'tags': [Tag.Public, Tag.Graphical],
     },
+    /*
     {
         'key': 'ECPMSummaryCard',
         'name': 'ECPM Summary Card',
@@ -120,14 +123,7 @@ const cardDefinitionsRaw: CardDefinition[] = [
         'options': {'target': 'earnings'},
         'tags': [Tag.Numerical, Tag.Graphical],
     },
-    {
-        'key': 'HeatMapECPM',
-        'name': 'Heat Map: Historical eCPM',
-        'description': 'This displays a heat map showing the historical network eCPM.',
-        'component': HeatMapPlot,
-        'options': {'target': 'ecpm'},
-        'tags': [Tag.Public, Tag.Graphical],
-    },
+    */
     {
         'key': 'HeatMapEarnings',
         'name': 'Heat Map: Historical Earnings',

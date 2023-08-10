@@ -518,4 +518,67 @@ class ECPMByGenreV1(BaseCard):
 
 # ---
 
+class HeatMapPlotV1Point(BaseModel):
+    x: str
+    y: Union[float, int]
+
+class HeatMapPlotV1Row(BaseModel):
+    name: str
+    data: List[HeatMapPlotV1Point]
+
+class HeatMapPlotV1Options(BaseModel):
+    user_id: int
+    target: str
+
+class HeatMapPlotV1(BaseCard):
+    rows: List[HeatMapPlotV1Row]
+
+    @classmethod
+    @validate_arguments
+    def build(self, options: HeatMapPlotV1Options):
+        day_of_week_to_data = {}
+        with connection() as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    """
+                    SELECT
+                        date,
+                        to_char(date, 'Day') as day_of_week,
+                        date_trunc('week', date) as start_of_week,
+                        SUM(earnings) as earnings,
+                        SUM(impressions) as impressions
+                    FROM record
+                    LEFT JOIN ad_unit ON record.admob_ad_unit_id = ad_unit.admob_ad_unit_id
+                    LEFT JOIN app ON ad_unit.admob_app_id = app.admob_app_id
+                    LEFT JOIN publisher ON app.admob_publisher_id = publisher.admob_publisher_id
+                    LEFT JOIN account ON publisher.account_id = account.id
+                    WHERE account.id = %s AND date > current_date - interval '11 weeks'
+                    GROUP BY date
+                    ORDER BY date ASC
+                    """,
+                    (options.user_id,),
+                )
+                started = False
+                for row in cursor.fetchall():
+                    if started or row["day_of_week"].strip() == "Monday":
+                        started = True
+                    else:
+                        continue
+                    if row["day_of_week"] not in day_of_week_to_data:
+                        day_of_week_to_data[row["day_of_week"]] = {
+                            "name": row["day_of_week"].strip(),
+                            "data": []
+                        }
+                    if options.target == "earnings":
+                        y = float(row["earnings"]) / (1000.0 * 1000.0)
+                    else:
+                        y = int(row["impressions"])
+                    day_of_week_to_data[row["day_of_week"]]["data"].append({
+                        "x": row["start_of_week"].strftime("%Y-%m-%d"),
+                        "y": y
+                    })
+        return HeatMapPlotV1(rows=list(reversed(day_of_week_to_data.values())))
+
+# ---
+
 card_name_to_class = {card.__name__: card for card in BaseCard.__subclasses__()}
