@@ -17,7 +17,7 @@ export const fetchProfile = async () => {
         }
     })
     if (response.status !== 200) {
-        return {}
+        throw new Error("Failed to fetch profile")
     }
     return await response.json()
 }

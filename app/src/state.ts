@@ -1,15 +1,32 @@
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import router from './router';
 import { Storage } from '@ionic/storage';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { fetchProfile } from '@/api'
 
 const store = new Storage();
 const authToken = ref("");
 const overviewCards = reactive([
     { "key": 'ReportCard', "options": {} },
-    { "key": 'HeatMapImpressions', "options": {'target': 'impressions'} },
+    { "key": 'HeatMapImpressions', "options": { 'target': 'impressions' } },
     { "key": 'EarningsByDayOfWeek', "options": {} },
 ]) as any
+const profile = ref({})
+
+const loadProfile = () => {
+    if (!authToken.value) {
+        return;
+    }
+    fetchProfile().then((res) => {
+        profile.value = res
+    }).catch((err) => {
+        alert("Unable to fetch profile.")
+        authToken.value = ""
+        store.set('authToken', '')
+        router.push("/onboarding")
+    })
+}
+watch(authToken, loadProfile)
 
 store.create().then(async () => {
     App.addListener('appUrlOpen', function (event: URLOpenListenerEvent) {
@@ -28,4 +45,4 @@ store.create().then(async () => {
 });
 
 
-export { authToken, overviewCards, store }
+export { authToken, overviewCards, store, profile, loadProfile }

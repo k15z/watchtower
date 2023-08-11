@@ -12,11 +12,8 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-card v-if="loading || Object.keys(profile).length">
-        <div v-if="loading" style="padding:20px;">
-          <skeleton-loader :rows="2"></skeleton-loader>
-        </div>
-        <ion-card-content v-if="Object.keys(profile).length">
+      <ion-card v-if="Object.keys(profile).length">
+        <ion-card-content>
           <ion-item lines="none">
             <ion-avatar slot="start">
               <img :src="profile.picture_url" />
@@ -56,7 +53,7 @@
 
 <script setup lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonCard, IonCardContent, IonItem, IonAvatar, IonLabel } from '@ionic/vue';
-import { authToken, store, overviewCards } from '@/state';
+import { authToken, store, overviewCards, profile } from '@/state';
 import { cardDefinitions } from '@/cards';
 import { logInOutline, logOutOutline } from 'ionicons/icons';
 import { fetchProfile } from '@/api'
@@ -65,23 +62,6 @@ import router from '@/router';
 import WatchtowerLogo from '@/components/WatchtowerLogo.vue';
 import SkeletonLoader from '@/components/SkeletonLoader.vue';
 
-const loading = ref(false)
-const loadData = () => {
-  if (!authToken.value) {
-    profile.value = {}
-    return
-  }
-  loading.value = true
-  fetchProfile().then((res) => {
-    profile.value = res
-    loading.value = false
-  })
-}
-
-const profile = ref({})
-watch(authToken, loadData)
-loadData()
-
 const login = () => {
   window.open("https://admobwatchtower.com/connect")
 }
@@ -89,6 +69,7 @@ const login = () => {
 const logout = () => {
   authToken.value = ''
   store.clear()
+  router.push("/onboarding")
 }
 
 function shuffle(a: any[]) {

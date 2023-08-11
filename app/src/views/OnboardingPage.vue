@@ -42,8 +42,8 @@ const login = () => {
 
 const easterEgg = () => {
   // Log in with a test account.
-  store.set('authToken', "8449ee12-ecf8-445f-b721-cb2022b28ff0")
-  authToken.value = "8449ee12-ecf8-445f-b721-cb2022b28ff0"
+  store.set('authToken', "d537a8df-51a5-4ab3-84d8-7eaa1fcae5f7")
+  authToken.value = "d537a8df-51a5-4ab3-84d8-7eaa1fcae5f7"
   router.push('/')
 }
 </script>

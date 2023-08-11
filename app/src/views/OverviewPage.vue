@@ -16,6 +16,8 @@
         <ion-refresher-content></ion-refresher-content>
       </ion-refresher>
 
+      <account-status></account-status>
+
       <ion-reorder-group :key="componentKey" :disabled="!editable" @ionItemReorder="handleReorder($event)">
         <template v-for="(card, idx) in overviewCards" :key="card.key">
           <div>
@@ -46,7 +48,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
-import { authToken, overviewCards } from '@/state'
+import { authToken, overviewCards, loadProfile } from '@/state'
+import AccountStatus from '@/components/AccountStatus.vue';
 import { cardDefinitions } from '@/cards';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonReorder, IonButton, IonFab, IonIcon, IonFabButton, IonReorderGroup, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { closeOutline, reorderThreeOutline, trashOutline, pencilOutline } from 'ionicons/icons';
@@ -69,6 +72,7 @@ const handleReorder = (event: CustomEvent) => {
 const handleRefresh = (event: any) => {
   componentKey.value += 1
   event.target.complete();
+  loadProfile()
 }
 
 watch(authToken, () => {

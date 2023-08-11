@@ -577,7 +577,7 @@ class HeatMapPlotV1(BaseCard):
                         "x": row["start_of_week"].strftime("%Y-%m-%d"),
                         "y": y
                     })
-        return HeatMapPlotV1(rows=list(reversed(day_of_week_to_data.values())))
+        return HeatMapPlotV1(rows=list(day_of_week_to_data.values()))
 
 # ---
 
