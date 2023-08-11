@@ -28,11 +28,15 @@
       </ion-card>
 
       <div style="text-align:center;" class="ion-padding">
+        <ion-button @click="restoreDefaults" expand="full" color="secondary">
+          <ion-icon slot="start" :icon="refreshOutline"></ion-icon>
+          Restore Default Cards
+        </ion-button>
         <ion-button v-if="!authToken" @click="login" expand="full">
           <ion-icon slot="start" :icon="logInOutline"></ion-icon>
           Login
         </ion-button>
-        <ion-button v-if="authToken" @click="login" expand="full">
+        <ion-button v-if="authToken" @click="login" expand="full" color="warning">
           <ion-icon slot="start" :icon="logInOutline"></ion-icon>
           Reauthenticate
         </ion-button>
@@ -55,15 +59,22 @@
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonCard, IonCardContent, IonItem, IonAvatar, IonLabel } from '@ionic/vue';
 import { authToken, store, overviewCards, profile } from '@/state';
 import { cardDefinitions } from '@/cards';
-import { logInOutline, logOutOutline } from 'ionicons/icons';
-import { fetchProfile } from '@/api'
-import { watch, ref } from 'vue'
+import { logInOutline, logOutOutline, refreshOutline } from 'ionicons/icons';
 import router from '@/router';
 import WatchtowerLogo from '@/components/WatchtowerLogo.vue';
-import SkeletonLoader from '@/components/SkeletonLoader.vue';
 
 const login = () => {
   window.open("https://admobwatchtower.com/connect")
+}
+
+const restoreDefaults = () => {
+  overviewCards.length = 0
+  overviewCards.push(...[
+    { "key": 'ReportCard' },
+    { "key": 'HeatMapImpressions' },
+    { "key": 'EarningsByDayOfWeek' },
+  ])
+  router.push("/")
 }
 
 const logout = () => {

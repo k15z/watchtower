@@ -115,7 +115,6 @@ const previewCard = (card: any) => {
 const addCard = (card: any) => {
   overviewCards.push({
     key: card.key,
-    options: card.options || {}
   })
   showModal.value = false
 }

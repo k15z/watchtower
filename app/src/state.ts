@@ -7,9 +7,9 @@ import { fetchProfile } from '@/api'
 const store = new Storage();
 const authToken = ref("");
 const overviewCards = reactive([
-    { "key": 'ReportCard', "options": {} },
-    { "key": 'HeatMapImpressions', "options": { 'target': 'impressions' } },
-    { "key": 'EarningsByDayOfWeek', "options": {} },
+    { "key": 'ReportCard' },
+    { "key": 'HeatMapImpressions' },
+    { "key": 'EarningsByDayOfWeek' },
 ]) as any
 const profile = ref({})
 
@@ -28,6 +28,10 @@ const loadProfile = () => {
 }
 watch(authToken, loadProfile)
 
+watch(overviewCards, () => {
+    store.set('overviewCards', JSON.stringify(overviewCards))
+})
+
 store.create().then(async () => {
     App.addListener('appUrlOpen', function (event: URLOpenListenerEvent) {
         // Handle an authentication callback. After the user authenticates on the website, 
@@ -41,6 +45,12 @@ store.create().then(async () => {
     authToken.value = await store.get('authToken')
     if (!authToken.value) {
         router.push('/onboarding')
+    }
+
+    const restoredCards = await store.get('overviewCards');
+    if (restoredCards) {
+        overviewCards.length = 0
+        overviewCards.push(...JSON.parse(restoredCards))
     }
 });
 

@@ -21,7 +21,7 @@
       <ion-reorder-group :key="componentKey" :disabled="!editable" @ionItemReorder="handleReorder($event)">
         <template v-for="(card, idx) in overviewCards" :key="card.key">
           <div>
-            <component :is="cardDefinitions[card.key].component" :options="card.options"></component>
+            <component :is="cardDefinitions[card.key].component" :options="cardDefinitions[card.key].options"></component>
             <div class="edit-menu" v-if="editable">
               <ion-button @click="deleteCard(idx)" color="danger" size="small">
                 <ion-icon :icon="trashOutline"></ion-icon>
