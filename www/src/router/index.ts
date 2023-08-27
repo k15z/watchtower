@@ -7,6 +7,10 @@ const routes = [
     component: () => import('@/layouts/Home.vue'),
   },
   {
+    path: '/support',
+    component: () => import('@/layouts/Support.vue'),
+  },
+  {
     path: '/connect',
     component: () => import('@/layouts/Connect.vue'),
   },

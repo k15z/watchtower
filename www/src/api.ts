@@ -54,17 +54,17 @@ function realtimeQuery(start: string, end: string, breakdowns: string[]) {
 
 function sendMessage(email: string, message: string) {
     return fetch(BASE_API_URL + "/account/message", {
-      method: 'POST',
-      mode: 'cors',
-      headers: {
-        'Authorization': `Bearer ${store.token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: email,
-        message: message
-      })
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+            'Authorization': `Bearer ${store.token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            email: email,
+            message: message
+        })
     })
-  }
+}
 
 export { BASE_API_URL, helloWorld, ecpmByBreakdowns, realtimeByApp, realtimeQuery, sendMessage }
