@@ -35,9 +35,10 @@ import { logInOutline } from 'ionicons/icons';
 import { authToken, store } from '@/state';
 import router from '@/router';
 import WatchtowerLogo from '@/components/WatchtowerLogo.vue';
+import { Browser } from '@capacitor/browser';
 
 const login = () => {
-  window.open("https://admobwatchtower.com/connect")
+  Browser.open({ url: 'https://admobwatchtower.com/connect' });
 }
 
 const easterEgg = () => {

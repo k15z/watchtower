@@ -3,6 +3,7 @@ import router from './router';
 import { Storage } from '@ionic/storage';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { fetchProfile } from '@/api'
+import { Browser } from '@capacitor/browser';
 
 const store = new Storage();
 const authToken = ref("");
@@ -40,6 +41,7 @@ store.create().then(async () => {
         authToken.value = token as string
         store.set('authToken', token)
         router.push('/')
+        Browser.close()
     });
 
     authToken.value = await store.get('authToken')
