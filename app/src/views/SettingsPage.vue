@@ -36,13 +36,17 @@
           <ion-icon slot="start" :icon="logInOutline"></ion-icon>
           Login
         </ion-button>
-        <ion-button v-if="authToken" @click="login" expand="full" color="warning">
+        <ion-button v-if="authToken" @click="login" expand="full" color="primary">
           <ion-icon slot="start" :icon="logInOutline"></ion-icon>
           Reauthenticate
         </ion-button>
-        <ion-button v-if="authToken" @click="logout" expand="full" color="danger">
+        <ion-button v-if="authToken" @click="logout" expand="full" color="warning">
           <ion-icon slot="start" :icon="logOutOutline"></ion-icon>
           Logout
+        </ion-button>
+        <ion-button v-if="authToken" @click="callDeleteAccount" expand="full" color="danger">
+          <ion-icon slot="start" :icon="trashOutline"></ion-icon>
+          Delete Account
         </ion-button>
 
         <ion-button href="https://admobwatchtower.com/privacy" target="_blank" expand="full" fill="clear">Privacy
@@ -56,11 +60,12 @@
 
 
 <script setup lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonCard, IonCardContent, IonItem, IonAvatar, IonLabel } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonIcon, IonCard, IonCardContent, IonItem, IonAvatar, IonLabel, alertController } from '@ionic/vue';
 import { authToken, store, overviewCards, profile } from '@/state';
 import { cardDefinitions } from '@/cards';
-import { logInOutline, logOutOutline, refreshOutline } from 'ionicons/icons';
+import { logInOutline, logOutOutline, refreshOutline, trashOutline } from 'ionicons/icons';
 import router from '@/router';
+import { deleteAccount } from '@/api';
 import WatchtowerLogo from '@/components/WatchtowerLogo.vue';
 
 const login = () => {
@@ -81,6 +86,26 @@ const logout = () => {
   authToken.value = ''
   store.clear()
   router.push("/onboarding")
+}
+
+const callDeleteAccount = async () => {
+  const alert = await alertController.create({
+    header: 'Are you sure?',
+    message: 'Your account data will be deleted and may not be recoverable.',
+    buttons: [
+      {
+        text: 'Cancel',
+      },
+      {
+        text: 'Delete',
+        handler: async () => {
+          logout()
+          deleteAccount()
+        }
+      }
+    ],
+  });
+  await alert.present();
 }
 
 function shuffle(a: any[]) {

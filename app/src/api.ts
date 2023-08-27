@@ -7,6 +7,17 @@ if (Capacitor.getPlatform() == 'web') {
     BASE_API_URL = "http://localhost:8000"
 }
 
+export const deleteAccount = async () => {
+    return fetch(BASE_API_URL + "/account", {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+            'Authorization': `Bearer ${authToken.value}`,
+            'Content-Type': 'application/json'
+        },
+    })
+}
+
 export const fetchProfile = async () => {
     let response = await fetch(BASE_API_URL + "/account", {
         method: 'GET',
